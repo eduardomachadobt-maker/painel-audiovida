@@ -3,70 +3,232 @@
 <title>Painel SDR · Audiovida</title>
 <style>
 :root{--navy:#1F5C85;--teal:#3FB3AD;--gray:#5A5E5F;--bg:#f4f7f9;--card:#fff;--line:#e1e8ed;--comp:#2e9e7a;--falt:#d9534f;--desm:#e9a23b;--pend:#a7b3b8;--txt:#1d2b34}
-*{box-sizing:border-box}body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;background:var(--bg);color:var(--txt)}
+*{box-sizing:border-box}
+body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;background:var(--bg);color:var(--txt);-webkit-text-size-adjust:100%}
 header{background:#fff;border-bottom:4px solid var(--teal);padding:12px 16px;display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap}
-header img{height:44px;display:block}
-header h1{font-size:17px;margin:0;color:var(--navy)}header small{color:var(--gray);display:block;font-size:12px}.hd{text-align:right}
+header img{height:44px;max-width:60vw;object-fit:contain;display:block}
+header h1{font-size:17px;margin:0;color:var(--navy)}
+header small{color:var(--gray);display:block;font-size:12px}
+.hd{text-align:right}
 main{max-width:1000px;margin:0 auto;padding:16px}
-.tabs{display:flex;gap:8px;margin-bottom:14px}
-.tabs button{border:1px solid var(--line);background:#fff;padding:8px 16px;border-radius:20px;font-size:14px;cursor:pointer;color:var(--gray)}
-.tabs button.on{background:var(--navy);color:#fff;border-color:var(--navy)}
-.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin-bottom:14px}
+.tabs{display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap}
+.tabs button,.rng button{border:1px solid var(--line);background:#fff;padding:8px 16px;border-radius:20px;font-size:14px;cursor:pointer;color:var(--gray);font-family:inherit}
+.tabs button.on,.rng button.on{background:var(--navy);color:#fff;border-color:var(--navy)}
+.rng{display:flex;gap:6px;flex-wrap:wrap;margin:0 0 10px}
+.rng button{padding:6px 12px;font-size:13px}
+#ctl{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:14px}
+#ctl label{font-size:13px;color:var(--gray)}
+#unit{font-family:inherit;font-size:14px;padding:8px 12px;border:1px solid var(--line);border-radius:10px;background:#fff;color:var(--txt);min-width:200px;max-width:100%}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px;margin-bottom:14px}
 .tile,.card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px}
-.tile{border-top:3px solid var(--teal)}.tile b{display:block;font-size:28px;color:var(--navy)}.tile span{font-size:12px;color:var(--gray)}
-.card{margin-bottom:14px}.card h2{font-size:15px;margin:0 0 10px;color:var(--navy)}
+.tile{border-top:3px solid var(--teal)}
+.tile b{display:block;font-size:28px;color:var(--navy)}
+.tile span{font-size:12px;color:var(--gray)}
+.tag{display:inline-block;font-style:normal;font-size:10px;padding:2px 7px;border-radius:10px;margin-top:6px}
+.tu{background:#e3f6f5;color:#1d7f7a}
+.tm{background:#eceff1;color:#5A5E5F}
+.card{margin-bottom:14px}
+.card h2{font-size:15px;margin:0 0 10px;color:var(--navy)}
+.sec{font-size:14px;color:var(--navy);margin:4px 0 8px}
+.sec small{color:var(--gray);font-weight:400;font-size:12px;margin-left:6px}
+.unitbox{border:2px solid var(--teal);border-radius:14px;padding:12px;margin-bottom:14px;background:#fff}
+.unitbox .grid{margin-bottom:6px}
 .note{font-size:12px;color:var(--gray);margin-top:8px;line-height:1.5}
-.warn{background:#fff7e6;border-color:#f0d9a8;color:#6b4e00}
-.bar{display:flex;height:26px;border-radius:8px;overflow:hidden;margin:6px 0}
-.bar div{display:flex;align-items:center;justify-content:center;color:#fff;font-size:12px;min-width:0}
-.leg{display:flex;gap:12px;flex-wrap:wrap;font-size:12px;color:var(--gray)}.leg i{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:4px}
-table{width:100%;border-collapse:collapse;font-size:13px}th,td{padding:7px 6px;border-bottom:1px solid var(--line);text-align:right}th:first-child,td:first-child{text-align:left}th{color:var(--gray);font-weight:600}
+.warn{background:#fff7e6;border-color:#f0d9a8}
+.warn h2{color:#6b4e00}
+.warn .note{color:#6b4e00}
+.info{background:#eef6fb;border-color:#cfe3f0}
+.bar{display:flex;height:30px;border-radius:8px;overflow:hidden;margin:6px 0}
+.bar div{display:flex;align-items:center;justify-content:center;color:#fff;font-size:12px;min-width:0;cursor:pointer}
+.leg{display:flex;gap:12px;flex-wrap:wrap;font-size:12px;color:var(--gray)}
+.leg span{cursor:pointer}
+.leg i{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:4px}
+.tw{overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:13px}
+th,td{padding:7px 6px;border-bottom:1px solid var(--line);text-align:right;white-space:nowrap}
+th:first-child,td:first-child{text-align:left}
+th{color:var(--gray);font-weight:600}
+tr[data-unit]{cursor:pointer}
+tr[data-unit]:hover{background:#f1f8f8}
+tr.sel{background:#e3f6f5;font-weight:600}
 .two{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:14px}
-svg text{font-family:inherit}
-#st{font-size:12px;opacity:.85}.err{color:#b00020;padding:20px}
+svg text{font-family:inherit;pointer-events:none}
+#cv{display:block;touch-action:pan-y;cursor:crosshair;user-select:none;-webkit-user-select:none}
+#tip{position:fixed;z-index:50;display:none;background:#12384f;color:#fff;border-radius:10px;padding:8px 10px;font-size:12px;line-height:1.45;max-width:260px;pointer-events:none;box-shadow:0 4px 14px rgba(0,0,0,.25)}
+#tip b{display:block;font-size:13px;margin-bottom:2px}
+#st{font-size:12px}
+.err{color:#b00020;padding:20px}
+@media(max-width:520px){header{justify-content:center}.hd{text-align:center}.tile b{font-size:24px}#unit{width:100%}}
 </style></head><body>
 <header><img alt="Audiovida soluções auditivas" src="Logo_1.png"><div class="hd"><h1>Painel SDR · Audiovida</h1><small>Números agregados · <span id="st">carregando…</span></small></div></header>
 <main>
 <div class="tabs"><button data-t="nov" class="on">Novembro</button><button data-t="out">Outubro</button><button data-t="cmp">Comparativo</button></div>
+<div id="ctl"><label for="unit">Unidade:</label><select id="unit"><option value="">Todas as unidades</option></select></div>
 <div id="app"></div>
 </main>
+<div id="tip"></div>
 <script>
 const CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQj0nUuuN100lJWxfnJmD9E33Q79MNiHBHaLXV9Wwtx2yf3biD_EkuFvHJO5qQdeGgcRr4uetl_fdme/pub?gid=1632344748&single=true&output=csv";
 const REFRESH_MS = 120000;
-let G=null, tab="nov";
+let G=null, tab="nov", unit="", range=0, CV=null;
+const $=s=>document.querySelector(s);
 const n=v=>{v=parseFloat(String(v||"0").replace(",","."));return isNaN(v)?0:v};
 const pct=(a,b)=>b>0?Math.round(a/b*1000)/10:0;
 const f1=x=>String(x).replace(".",",")+"%";
+const pad=x=>String(x).padStart(2,"0");
+const esc=s=>String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+
 function csv(t){const r=[];let row=[],c="",q=false;for(let i=0;i<t.length;i++){const ch=t[i];if(q){if(ch=='"'){if(t[i+1]=='"'){c+='"';i++}else q=false}else c+=ch}else if(ch=='"')q=true;else if(ch==","){row.push(c);c=""}else if(ch=="\n"){row.push(c);r.push(row);row=[];c=""}else if(ch!="\r")c+=ch}row.push(c);r.push(row);return r}
 function parse(g){
  const cell=(r,c)=>(g[r-1]||[])[c]||"";
  const ind={};for(let r=2;r<=11;r++)ind[cell(r,0)]={out:n(cell(r,1)),nov:n(cell(r,2))};
  const dia=[];for(let r=14;r<=44;r++)dia.push({d:n(cell(r,0)),ao:n(cell(r,1)),an:n(cell(r,2)),co:n(cell(r,3)),cn:n(cell(r,4))});
- const un=[];for(let r=2;r<=8;r++)un.push({nome:cell(r,6),ao:n(cell(r,8)),an:n(cell(r,9)),lo:n(cell(r,10)),ln:n(cell(r,11))});
+ const un=[];for(let r=2;r<=8;r++)if(cell(r,6))un.push({nome:cell(r,6),ao:n(cell(r,8)),an:n(cell(r,9)),lo:n(cell(r,10)),ln:n(cell(r,11))});
  return{ind,dia,un}}
-function m(k){return tab==="out"?"out":"nov"}
-function tiles(d,k){const g=x=>d.ind[x][k];const conv=g("conversas_meta")+g("conversas_google"),form=g("leads_formulario");
- const T=(b,s)=>`<div class="tile"><b>${b}</b><span>${s}</span></div>`;
+function m(){return tab==="out"?"out":"nov"}
+
+/* ---------- dicas (mouse e toque) ---------- */
+function hideTip(){$("#tip").style.display="none";const l=$("#cvl");if(l){l.style.display="none";$("#cva").style.display="none";$("#cvc").style.display="none"}}
+function tipAt(lines,x,y){
+ const t=$("#tip");t.innerHTML=lines.map((s,i)=>i?`<div>${esc(s)}</div>`:`<b>${esc(s)}</b>`).join("");
+ t.style.display="block";
+ const w=t.offsetWidth,h=t.offsetHeight;
+ let left=Math.max(8,Math.min(window.innerWidth-w-8,x-w/2));
+ let top=y-h-14;if(top<8)top=y+18;
+ t.style.left=left+"px";t.style.top=top+"px"}
+function tipFrom(e){const t=e.target.closest&&e.target.closest("[data-tip]");if(!t)return false;tipAt(t.dataset.tip.split("|"),e.clientX,e.clientY);return true}
+document.addEventListener("pointerover",e=>{if(e.pointerType==="mouse")tipFrom(e)});
+document.addEventListener("pointermove",e=>{if(e.pointerType==="mouse"&&e.target.closest&&e.target.closest("[data-tip]"))tipFrom(e)});
+document.addEventListener("pointerout",e=>{if(e.pointerType==="mouse"&&e.target.closest&&e.target.closest("[data-tip]"))hideTip()});
+document.addEventListener("click",e=>{
+ if(tipFrom(e))return;
+ if(!(e.target.closest&&e.target.closest("#cv")))hideTip()});
+
+/* ---------- blocos ---------- */
+function tiles(d,k,tagged){
+ const g=x=>d.ind[x][k];const conv=g("conversas_meta")+g("conversas_google"),form=g("leads_formulario");
+ const tg=tagged?`<em class="tag tm">total do mês</em>`:"";
+ const T=(b,s)=>`<div class="tile"><b>${b}</b><span>${s}</span>${tg}</div>`;
  return `<div class="grid">${T(conv+form,"Oportunidades (conversas + formulário)")}${T(conv,"Conversas iniciadas")}${T(form,"Leads de formulário")}${T(g("ligacoes_google"),"Ligações Google Ads")}${T(g("agendamentos"),"Agendamentos")}${T(g("compareceram"),"Compareceram")}${T(f1(pct(g("compareceram"),g("agendamentos"))),"Taxa de comparecimento")}</div>`}
-function status(d,k){const g=x=>d.ind[x][k],a=g("agendamentos");const seg=[["Compareceram","comp",g("compareceram")],["Faltaram","falt",g("faltaram")],["Desmarcaram","desm",g("desmarcaram")],["Aguardando","pend",g("aguardando")]];
- return `<div class="card"><h2>Como estão as consultas agendadas</h2><div class="bar">${seg.map(s=>s[2]>0?`<div style="width:${s[2]/a*100}%;background:var(--${s[1]})" title="${s[0]}: ${s[2]}">${s[2]}</div>`:"").join("")}</div><div class="leg">${seg.map(s=>`<span><i style="background:var(--${s[1]})"></i>${s[0]}: ${s[2]}</span>`).join("")}</div><div class="note">Taxa de comparecimento = compareceram ÷ agendamentos. Consultas "aguardando" ainda não aconteceram ou não tiveram resultado lançado e contam como pendentes. Agendamento feito num mês pode ter consulta em outro.</div></div>`}
-function curve(d,k){const key=k==="out"?["ao","co"]:["an","cn"];let a=0,c=0;const P=d.dia.map(x=>({d:x.d,a:(a+=x[key[0]]),c:(c+=x[key[1]])}));
- let last=P.length;if(k==="nov")last=Math.max(...P.map((p,i)=>p.d<=new Date().getDate()?i+1:0),1);const pts=P.slice(0,last);
- const W=560,H=200,pl=30,pb=22,mx=Math.max(1,...pts.map(p=>p.a)),X=i=>pl+i*(W-pl-10)/Math.max(1,P.length-1),Y=v=>H-pb-v*(H-pb-12)/mx;
- const L=(s)=>pts.map((p,i)=>(i?"L":"M")+X(i).toFixed(1)+" "+Y(p[s]).toFixed(1)).join(" ");
- return `<div class="card"><h2>Curva de crescimento acumulada (por dia da consulta)</h2><svg viewBox="0 0 ${W} ${H}" width="100%"><line x1="${pl}" y1="${H-pb}" x2="${W-10}" y2="${H-pb}" stroke="#ccd6dc"/><text x="2" y="${Y(mx)+4}" font-size="10" fill="#5A5E5F">${mx}</text><text x="2" y="${H-pb+4}" font-size="10" fill="#5A5E5F">0</text><path d="${L("a")}" fill="none" stroke="#1F5C85" stroke-width="2.5"/><path d="${L("c")}" fill="none" stroke="#3FB3AD" stroke-width="2.5"/>${[1,8,15,22,29].map(x=>`<text x="${X(x-1)}" y="${H-6}" font-size="10" fill="#5A5E5F" text-anchor="middle">${x}</text>`).join("")}</svg><div class="leg"><span><i style="background:#1F5C85"></i>Agendamentos: ${pts.length?pts[pts.length-1].a:0}</span><span><i style="background:#3FB3AD"></i>Compareceram: ${pts.length?pts[pts.length-1].c:0}</span></div><div class="note">Soma pela data da consulta. Agendamentos com consulta em outro mês não aparecem nesta curva.</div></div>`}
-function units(d,k){const r=d.un.map(u=>({n:u.nome,a:k==="out"?u.ao:u.an,l:k==="out"?u.lo:u.ln}));
- return `<div class="card"><h2>Demanda por unidade</h2><table><tr><th>Unidade</th><th>Leads de formulário</th><th>Agendamentos</th></tr>${r.map(x=>`<tr><td>${x.n}</td><td>${x.l}</td><td>${x.a}</td></tr>`).join("")}</table><div class="note">Leads de formulário e agendamentos vêm de fontes diferentes; a comparação por unidade é indicativa.</div></div>`}
-function donut(a,c,t){const p=a>0?c/a:0,R=42,C=2*Math.PI*R;return `<div class="card" style="text-align:center"><h2>${t}</h2><svg viewBox="0 0 120 120" width="170"><circle cx="60" cy="60" r="${R}" fill="none" stroke="#e1e8ed" stroke-width="16"/><circle cx="60" cy="60" r="${R}" fill="none" stroke="#2e9e7a" stroke-width="16" stroke-dasharray="${p*C} ${C}" transform="rotate(-90 60 60)"/><text x="60" y="58" text-anchor="middle" font-size="20" font-weight="700" fill="#1F5C85">${f1(pct(c,a))}</text><text x="60" y="74" text-anchor="middle" font-size="10" fill="#5A5E5F">${c} de ${a}</text></svg><div class="note">${c} compareceram de ${a} agendamentos</div></div>`}
-function cmp(d){const o=d.ind,ao=o.agendamentos.out,co=o.compareceram.out,an=o.agendamentos.nov,cn=o.compareceram.nov;
- return `<div class="two">${donut(ao,co,"Outubro (mês todo)")}${donut(an,cn,"Novembro (até hoje)")}</div><div class="card"><table><tr><th>Indicador</th><th>Outubro</th><th>Novembro</th></tr><tr><td>Agendamentos</td><td>${ao}</td><td>${an}</td></tr><tr><td>Compareceram</td><td>${co}</td><td>${cn}</td></tr><tr><td>Taxa de comparecimento</td><td>${f1(pct(co,ao))}</td><td>${f1(pct(cn,an))}</td></tr><tr><td>Aguardando</td><td>${o.aguardando.out}</td><td>${o.aguardando.nov}</td></tr></table><div class="note">Novembro está em andamento: há ${o.aguardando.nov} consultas aguardando, o que reduz a taxa parcial. Compara-se mês fechado com mês aberto.</div></div>`}
-const WARN=`<div class="card warn"><h2 style="color:#6b4e00">Como ler este painel</h2><div class="note" style="color:#6b4e00">"Conversas iniciadas" (WhatsApp via Meta e Google Ads) e "Leads de formulário" são métricas diferentes. Uma mesma pessoa pode aparecer nas duas, então a soma (oportunidades) pode ter pequena sobreposição. Ligações do Google Ads são mostradas à parte e não entram nas oportunidades.</div></div>`;
-function render(){const a=document.getElementById("app");if(!G){return}
- a.innerHTML=tab==="cmp"?cmp(G)+WARN:tiles(G,m())+status(G,m())+curve(G,m())+units(G,m())+WARN;
- document.querySelectorAll(".tabs button").forEach(b=>b.classList.toggle("on",b.dataset.t===tab))}
+
+function unitBlock(d,k,u){
+ const ag=k==="out"?u.ao:u.an,le=k==="out"?u.lo:u.ln;
+ const totAg=d.ind.agendamentos[k],totLe=d.ind.leads_formulario[k];
+ const tg=`<em class="tag tu">filtrado: ${esc(u.nome)}</em>`;
+ const T=(b,s)=>`<div class="tile"><b>${b}</b><span>${s}</span>${tg}</div>`;
+ return `<div class="unitbox"><h2 class="sec" style="margin-top:0">Unidade: ${esc(u.nome)}<small>números filtrados por unidade</small></h2><div class="grid">${T(le,"Leads de formulário")}${T(ag,"Agendamentos")}${T(le>0?f1(pct(ag,le)):"—","Razão: agendamentos ÷ leads de formulário")}${T(totAg>0?f1(pct(ag,totAg)):"—","Participação nos agendamentos do mês")}</div><div class="note">Comparação: a razão geral do mês (todas as unidades) é ${totLe>0?f1(pct(totAg,totLe)):"—"} (${totAg} agendamentos ÷ ${totLe} leads de formulário). A razão é indicativa: leads de formulário e agendamentos vêm de fontes diferentes, e um agendamento pode ter vindo de outro canal.</div></div>`}
+
+function status(d,k,u){
+ const g=x=>d.ind[x][k],a=g("agendamentos");
+ const seg=[["Compareceram","comp",g("compareceram")],["Faltaram","falt",g("faltaram")],["Desmarcaram","desm",g("desmarcaram")],["Aguardando","pend",g("aguardando")]];
+ const tip=s=>esc(s[0]+"|"+s[2]+" de "+a+" agendamentos|"+f1(pct(s[2],a))+" do total");
+ const bar=a>0?seg.map(s=>s[2]>0?`<div data-tip="${tip(s)}" style="width:${s[2]/a*100}%;background:var(--${s[1]})">${s[2]}</div>`:"").join(""):"";
+ const extra=u?` <b>Status do mês todo: a planilha não separa as consultas por unidade.</b>`:"";
+ return `<div class="card"><h2>Como estão as consultas agendadas</h2><div class="bar">${bar}</div><div class="leg">${seg.map(s=>`<span data-tip="${tip(s)}"><i style="background:var(--${s[1]})"></i>${s[0]}: ${s[2]}</span>`).join("")}</div><div class="note">Passe o mouse ou toque nas cores para ver os detalhes. Taxa de comparecimento = compareceram ÷ agendamentos. Consultas "aguardando" ainda não aconteceram ou não tiveram resultado lançado e contam como pendentes. Agendamento feito num mês pode ter consulta em outro.${extra}</div></div>`}
+
+function curveData(d,k){
+ const ka=k==="out"?"ao":"an",kc=k==="out"?"co":"cn";
+ const now=new Date();let end;
+ if(k==="out")end=31;
+ else if(now<new Date(2026,10,1))end=1;
+ else if(now.getFullYear()===2026&&now.getMonth()===10)end=now.getDate();
+ else end=30;
+ const start=range?Math.max(1,end-range+1):1;
+ let a=0,c=0;
+ return d.dia.filter(x=>x.d>=start&&x.d<=end).map(x=>({d:x.d,da:x[ka],dc:x[kc],a:(a+=x[ka]),c:(c+=x[kc])}))}
+
+function curve(d,k,u){
+ const pts=curveData(d,k),N=pts.length,mm=k==="out"?"10":"11";
+ const btn=[[7,"Últimos 7 dias"],[14,"Últimos 14 dias"],[0,"Mês todo"]].map(r=>`<button data-range="${r[0]}" class="${range===r[0]?"on":""}">${r[1]}</button>`).join("");
+ if(!N){CV=null;return `<div class="card"><h2>Curva de crescimento acumulada</h2><div class="rng">${btn}</div><div class="note">Sem dados para o período.</div></div>`}
+ const W=600,H=230,pl=34,pr=12,pt=12,pb=26;
+ const mx=Math.max(1,...pts.map(p=>Math.max(p.a,p.c)));
+ const X=i=>N<2?pl+(W-pl-pr)/2:pl+i*(W-pl-pr)/(N-1);
+ const Y=v=>H-pb-v*(H-pb-pt)/mx;
+ const path=s=>pts.map((p,i)=>(i?"L":"M")+X(i).toFixed(1)+" "+Y(p[s]).toFixed(1)).join(" ");
+ const yt=[...new Set([0,mx>=4?Math.round(mx/2):0,mx])];
+ const grid=yt.map(v=>`<line x1="${pl}" y1="${Y(v)}" x2="${W-pr}" y2="${Y(v)}" stroke="#e1e8ed"/><text x="${pl-6}" y="${Y(v)+3}" font-size="10" fill="#5A5E5F" text-anchor="end">${v}</text>`).join("");
+ const step=Math.ceil(N/7);
+ const xl=pts.map((p,i)=>i%step===0?`<text x="${X(i)}" y="${H-8}" font-size="10" fill="#5A5E5F" text-anchor="middle">${pad(p.d)}/${mm}</text>`:"").join("");
+ const dots=pts.map((p,i)=>`<circle cx="${X(i)}" cy="${Y(p.a)}" r="2.5" fill="#1F5C85"/><circle cx="${X(i)}" cy="${Y(p.c)}" r="2.5" fill="#3FB3AD"/>`).join("");
+ const last=pts[N-1];
+ CV={pts,N,W,H,pl,pr,X,Y,mm};
+ const extra=u?" A curva mostra o mês todo: a planilha não separa os dias por unidade.":"";
+ return `<div class="card"><h2>Curva de crescimento acumulada (por dia da consulta)</h2><div class="rng">${btn}</div><svg id="cv" viewBox="0 0 ${W} ${H}" width="100%" role="img" aria-label="Curva acumulada de agendamentos e comparecimentos">${grid}${xl}<path d="${path("a")}" fill="none" stroke="#1F5C85" stroke-width="2.5"/><path d="${path("c")}" fill="none" stroke="#3FB3AD" stroke-width="2.5"/>${dots}<line id="cvl" x1="0" y1="${pt}" x2="0" y2="${H-pb}" stroke="#5A5E5F" stroke-dasharray="3 3" style="display:none"/><circle id="cva" r="5.5" fill="#1F5C85" stroke="#fff" stroke-width="2" style="display:none"/><circle id="cvc" r="5.5" fill="#3FB3AD" stroke="#fff" stroke-width="2" style="display:none"/><rect x="0" y="0" width="${W}" height="${H}" fill="transparent"/></svg><div class="leg" style="margin-top:6px"><span><i style="background:#1F5C85"></i>Agendamentos no período: ${last.a}</span><span><i style="background:#3FB3AD"></i>Compareceram no período: ${last.c}</span></div><div class="note">Passe o mouse ou arraste o dedo sobre a curva para ver cada dia. Soma pela data da consulta; agendamentos com consulta em outro mês não aparecem nesta curva. O recorte "últimos dias" termina no dia de hoje (novembro) ou no fim do mês (outubro).${extra}</div></div>`}
+
+function bindCurve(){
+ const s=$("#cv");if(!s||!CV)return;
+ const show=e=>{
+  const r=s.getBoundingClientRect(),x=(e.clientX-r.left)/r.width*CV.W;
+  let i=CV.N<2?0:Math.round((x-CV.pl)/((CV.W-CV.pl-CV.pr)/(CV.N-1)));
+  i=Math.max(0,Math.min(CV.N-1,i));const p=CV.pts[i],cx=CV.X(i);
+  const l=$("#cvl"),a=$("#cva"),c=$("#cvc");
+  l.setAttribute("x1",cx);l.setAttribute("x2",cx);l.style.display="";
+  a.setAttribute("cx",cx);a.setAttribute("cy",CV.Y(p.a));a.style.display="";
+  c.setAttribute("cx",cx);c.setAttribute("cy",CV.Y(p.c));c.style.display="";
+  tipAt(["Dia "+pad(p.d)+"/"+CV.mm,"Consultas agendadas para o dia: "+p.da+" (acumulado: "+p.a+")","Compareceram no dia: "+p.dc+" (acumulado: "+p.c+")"],r.left+cx/CV.W*r.width,r.top+CV.Y(Math.max(p.a,p.c))/CV.H*r.height)};
+ s.addEventListener("pointermove",show);
+ s.addEventListener("pointerdown",show);
+ s.addEventListener("pointerleave",e=>{if(e.pointerType==="mouse")hideTip()})}
+
+function units(d,k,u){
+ const rows=d.un.map(x=>({n:x.nome,a:k==="out"?x.ao:x.an,l:k==="out"?x.lo:x.ln}));
+ return `<div class="card"><h2>Demanda por unidade</h2><div class="tw"><table><tr><th>Unidade</th><th>Leads de formulário</th><th>Agendamentos</th><th>Razão</th></tr>${rows.map(x=>`<tr data-unit="${esc(x.n)}" class="${u&&u.nome===x.n?"sel":""}"><td>${esc(x.n)}</td><td>${x.l}</td><td>${x.a}</td><td>${x.l>0?f1(pct(x.a,x.l)):"—"}</td></tr>`).join("")}</table></div><div class="note">Toque ou clique numa unidade para filtrar o painel. Razão = agendamentos ÷ leads de formulário. Leads de formulário e agendamentos vêm de fontes diferentes; a comparação por unidade é indicativa.</div></div>`}
+
+function donut(d,k,title){
+ const g=x=>d.ind[x][k],a=g("agendamentos");
+ const seg=[["Compareceram","comp",g("compareceram")],["Faltaram","falt",g("faltaram")],["Desmarcaram","desm",g("desmarcaram")],["Aguardando","pend",g("aguardando")]];
+ const R=42,C=2*Math.PI*R;let off=0;
+ const tip=s=>esc(title+"|"+s[0]+": "+s[2]+" de "+a+" agendamentos|"+f1(pct(s[2],a))+" do total");
+ let arcs=`<circle cx="60" cy="60" r="${R}" fill="none" stroke="#e1e8ed" stroke-width="16"/>`;
+ seg.forEach(s=>{if(s[2]>0&&a>0){const len=s[2]/a*C;arcs+=`<circle data-tip="${tip(s)}" cx="60" cy="60" r="${R}" fill="none" style="stroke:var(--${s[1]});cursor:pointer" stroke-width="16" stroke-dasharray="${len} ${C-len}" stroke-dashoffset="${-off}" transform="rotate(-90 60 60)"/>`;off+=len}});
+ return `<div class="card" style="text-align:center"><h2>${esc(title)}</h2><svg viewBox="0 0 120 120" width="180">${arcs}<text x="60" y="58" text-anchor="middle" font-size="20" font-weight="700" fill="#1F5C85">${f1(pct(g("compareceram"),a))}</text><text x="60" y="74" text-anchor="middle" font-size="9" fill="#5A5E5F">comparecimento</text></svg><div class="leg" style="justify-content:center">${seg.map(s=>`<span data-tip="${tip(s)}"><i style="background:var(--${s[1]})"></i>${s[0]}: ${s[2]}</span>`).join("")}</div><div class="note">${g("compareceram")} compareceram de ${a} agendamentos. Toque ou passe o mouse nas fatias.</div></div>`}
+
+function cmp(d){
+ const o=d.ind,ao=o.agendamentos.out,co=o.compareceram.out,an=o.agendamentos.nov,cn=o.compareceram.nov;
+ return `<div class="two">${donut(d,"out","Outubro (mês todo)")}${donut(d,"nov","Novembro (até hoje)")}</div><div class="card"><div class="tw"><table><tr><th>Indicador</th><th>Outubro</th><th>Novembro</th></tr><tr><td>Agendamentos</td><td>${ao}</td><td>${an}</td></tr><tr><td>Compareceram</td><td>${co}</td><td>${cn}</td></tr><tr><td>Taxa de comparecimento</td><td>${f1(pct(co,ao))}</td><td>${f1(pct(cn,an))}</td></tr><tr><td>Aguardando</td><td>${o.aguardando.out}</td><td>${o.aguardando.nov}</td></tr></table></div><div class="note">Novembro está em andamento: há ${o.aguardando.nov} consultas aguardando, o que reduz a taxa parcial. Compara-se mês fechado com mês aberto. O filtro de unidade não se aplica ao comparativo.</div></div>`}
+
+const NOTA=`<div class="card info"><h2>Sobre os dados</h2><div class="note" style="color:#1d2b34">Os dados diários e por unidade vêm da aba "Resumo público" da planilha. Essa aba não cruza unidade com dia: ao escolher uma unidade, só os leads de formulário e os agendamentos são filtrados. A curva, o status das consultas, os compareceram e os totais continuam mostrando o mês todo.</div></div>`;
+const WARN=`<div class="card warn"><h2>Como ler este painel</h2><div class="note">"Conversas iniciadas" (WhatsApp via Meta e Google Ads) e "Leads de formulário" são métricas diferentes. Uma mesma pessoa pode aparecer nas duas, então a soma (oportunidades) pode ter pequena sobreposição. Ligações do Google Ads são mostradas à parte e não entram nas oportunidades.</div></div>`;
+
+/* ---------- render ---------- */
+function fillUnits(){
+ const s=$("#unit"),names=G.un.map(x=>x.nome);
+ const cur=[...s.options].slice(1).map(o=>o.value);
+ if(cur.join("|")!==names.join("|")){s.innerHTML='<option value="">Todas as unidades</option>'+names.map(x=>`<option value="${esc(x)}">${esc(x)}</option>`).join("")}
+ if(unit&&!names.includes(unit))unit="";
+ s.value=unit}
+function render(){
+ hideTip();
+ document.querySelectorAll(".tabs button").forEach(b=>b.classList.toggle("on",b.dataset.t===tab));
+ $("#ctl").style.display=tab==="cmp"?"none":"flex";
+ if(!G)return;
+ const a=$("#app");
+ if(tab==="cmp"){a.innerHTML=cmp(G)+NOTA+WARN;return}
+ const k=m(),u=unit?G.un.find(x=>x.nome===unit):null;
+ let h="";
+ if(u)h+=unitBlock(G,k,u)+`<h3 class="sec">Total do mês<small>a planilha não separa estes números por unidade</small></h3>`+tiles(G,k,true);
+ else h+=tiles(G,k,false);
+ h+=status(G,k,u)+curve(G,k,u)+units(G,k,u)+NOTA+WARN;
+ a.innerHTML=h;bindCurve()}
+
 document.querySelectorAll(".tabs button").forEach(b=>b.onclick=()=>{tab=b.dataset.t;render()});
-async function load(){const st=document.getElementById("st");
- try{const r=await fetch(CSV_URL+(CSV_URL.includes("?")?"&":"?")+"t="+Date.now(),{cache:"no-store"});if(!r.ok)throw 0;G=parse(csv(await r.text()));render();st.textContent="atualizado às "+new Date().toLocaleTimeString("pt-BR",{hour:"2-digit",minute:"2-digit"})}
- catch(e){st.textContent="falha ao atualizar";if(!G)document.getElementById("app").innerHTML='<div class="err">Não foi possível carregar os dados.</div>'}}
+$("#unit").onchange=e=>{unit=e.target.value;render()};
+$("#app").addEventListener("click",e=>{
+ const r=e.target.closest("[data-range]");
+ if(r){range=+r.dataset.range;render();return}
+ const u=e.target.closest("[data-unit]");
+ if(u){unit=unit===u.dataset.unit?"":u.dataset.unit;$("#unit").value=unit;render()}});
+
+async function load(){
+ const st=$("#st");
+ try{
+  const r=await fetch(CSV_URL+(CSV_URL.includes("?")?"&":"?")+"t="+Date.now(),{cache:"no-store"});
+  if(!r.ok)throw 0;
+  G=parse(csv(await r.text()));fillUnits();render();
+  st.textContent="atualizado às "+new Date().toLocaleTimeString("pt-BR",{hour:"2-digit",minute:"2-digit"})
+ }catch(e){
+  st.textContent="falha ao atualizar";
+  if(!G)$("#app").innerHTML='<div class="err">Não foi possível carregar os dados.</div>'}}
 load();setInterval(load,REFRESH_MS);
 </script></body></html>
