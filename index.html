@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Painel SDR · Audiovida</title>
+<style>
+:root{--navy:#1F5C85;--teal:#3FB3AD;--gray:#5A5E5F;--bg:#f4f7f9;--card:#fff;--line:#e1e8ed;--comp:#2e9e7a;--falt:#d9534f;--desm:#e9a23b;--pend:#a7b3b8;--txt:#1d2b34}
+*{box-sizing:border-box}body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;background:var(--bg);color:var(--txt)}
+header{background:var(--navy);color:#fff;padding:14px 16px;display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+header h1{font-size:18px;margin:0}header small{opacity:.8;display:block;font-size:12px}
+main{max-width:1000px;margin:0 auto;padding:16px}
+.tabs{display:flex;gap:8px;margin-bottom:14px}
+.tabs button{border:1px solid var(--line);background:#fff;padding:8px 16px;border-radius:20px;font-size:14px;cursor:pointer;color:var(--gray)}
+.tabs button.on{background:var(--navy);color:#fff;border-color:var(--navy)}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin-bottom:14px}
+.tile,.card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px}
+.tile b{display:block;font-size:28px;color:var(--navy)}.tile span{font-size:12px;color:var(--gray)}
+.card{margin-bottom:14px}.card h2{font-size:15px;margin:0 0 10px;color:var(--navy)}
+.note{font-size:12px;color:var(--gray);margin-top:8px;line-height:1.5}
+.warn{background:#fff7e6;border-color:#f0d9a8;color:#6b4e00}
+.bar{display:flex;height:26px;border-radius:8px;overflow:hidden;margin:6px 0}
+.bar div{display:flex;align-items:center;justify-content:center;color:#fff;font-size:12px;min-width:0}
+.leg{display:flex;gap:12px;flex-wrap:wrap;font-size:12px;color:var(--gray)}.leg i{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:4px}
+table{width:100%;border-collapse:collapse;font-size:13px}th,td{padding:7px 6px;border-bottom:1px solid var(--line);text-align:right}th:first-child,td:first-child{text-align:left}th{color:var(--gray);font-weight:600}
+.two{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:14px}
+svg text{font-family:inherit}
+#st{font-size:12px;opacity:.85}.err{color:#b00020;padding:20px}
+</style></head><body>
+<header><div><h1>Painel SDR · Audiovida</h1><small>Números agregados · <span id="st">carregando…</span></small></div></header>
+<main>
+<div class="tabs"><button data-t="nov" class="on">Novembro</button><button data-t="out">Outubro</button><button data-t="cmp">Comparativo</button></div>
+<div id="app"></div>
+</main>
+<script>
+const CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQj0nUuuN100lJWxfnJmD9E33Q79MNiHBHaLXV9Wwtx2yf3biD_EkuFvHJO5qQdeGgcRr4uetl_fdme/pub?gid=1632344748&single=true&output=csv";
+const REFRESH_MS = 120000;
+let G=null, tab="nov";
+const n=v=>{v=parseFloat(String(v||"0").replace(",","."));return isNaN(v)?0:v};
+const pct=(a,b)=>b>0?Math.round(a/b*1000)/10:0;
+const f1=x=>String(x).replace(".",",")+"%";
+function csv(t){const r=[];let row=[],c="",q=false;for(let i=0;i<t.length;i++){const ch=t[i];if(q){if(ch=='"'){if(t[i+1]=='"'){c+='"';i++}else q=false}else c+=ch}else if(ch=='"')q=true;else if(ch==","){row.push(c);c=""}else if(ch=="\n"){row.push(c);r.push(row);row=[];c=""}else if(ch!="\r")c+=ch}row.push(c);r.push(row);return r}
+function parse(g){
+ const cell=(r,c)=>(g[r-1]||[])[c]||"";
+ const ind={};for(let r=2;r<=11;r++)ind[cell(r,0)]={out:n(cell(r,1)),nov:n(cell(r,2))};
+ const dia=[];for(let r=14;r<=44;r++)dia.push({d:n(cell(r,0)),ao:n(cell(r,1)),an:n(cell(r,2)),co:n(cell(r,3)),cn:n(cell(r,4))});
+ const un=[];for(let r=2;r<=8;r++)un.push({nome:cell(r,6),ao:n(cell(r,8)),an:n(cell(r,9)),lo:n(cell(r,10)),ln:n(cell(r,11))});
+ return{ind,dia,un}}
+function m(k){return tab==="out"?"out":"nov"}
+function tiles(d,k){const g=x=>d.ind[x][k];const conv=g("conversas_meta")+g("conversas_google"),form=g("leads_formulario");
+ const T=(b,s)=>`<div class="tile"><b>${b}</b><span>${s}</span></div>`;
+ return `<div class="grid">${T(conv+form,"Oportunidades (conversas + formulário)")}${T(conv,"Conversas iniciadas")}${T(form,"Leads de formulário")}${T(g("ligacoes_google"),"Ligações Google Ads")}${T(g("agendamentos"),"Agendamentos")}${T(g("compareceram"),"Compareceram")}${T(f1(pct(g("compareceram"),g("agendamentos"))),"Taxa de comparecimento")}</div>`}
+function status(d,k){const g=x=>d.ind[x][k],a=g("agendamentos");const seg=[["Compareceram","comp",g("compareceram")],["Faltaram","falt",g("faltaram")],["Desmarcaram","desm",g("desmarcaram")],["Aguardando","pend",g("aguardando")]];
+ return `<div class="card"><h2>Como estão as consultas agendadas</h2><div class="bar">${seg.map(s=>s[2]>0?`<div style="width:${s[2]/a*100}%;background:var(--${s[1]})" title="${s[0]}: ${s[2]}">${s[2]}</div>`:"").join("")}</div><div class="leg">${seg.map(s=>`<span><i style="background:var(--${s[1]})"></i>${s[0]}: ${s[2]}</span>`).join("")}</div><div class="note">Taxa de comparecimento = compareceram ÷ agendamentos. Consultas "aguardando" ainda não aconteceram ou não tiveram resultado lançado e contam como pendentes. Agendamento feito num mês pode ter consulta em outro.</div></div>`}
+function curve(d,k){const key=k==="out"?["ao","co"]:["an","cn"];let a=0,c=0;const P=d.dia.map(x=>({d:x.d,a:(a+=x[key[0]]),c:(c+=x[key[1]])}));
+ let last=P.length;if(k==="nov")last=Math.max(...P.map((p,i)=>p.d<=new Date().getDate()?i+1:0),1);const pts=P.slice(0,last);
+ const W=560,H=200,pl=30,pb=22,mx=Math.max(1,...pts.map(p=>p.a)),X=i=>pl+i*(W-pl-10)/Math.max(1,P.length-1),Y=v=>H-pb-v*(H-pb-12)/mx;
+ const L=(s)=>pts.map((p,i)=>(i?"L":"M")+X(i).toFixed(1)+" "+Y(p[s]).toFixed(1)).join(" ");
+ return `<div class="card"><h2>Curva de crescimento acumulada (por dia da consulta)</h2><svg viewBox="0 0 ${W} ${H}" width="100%"><line x1="${pl}" y1="${H-pb}" x2="${W-10}" y2="${H-pb}" stroke="#ccd6dc"/><text x="2" y="${Y(mx)+4}" font-size="10" fill="#5A5E5F">${mx}</text><text x="2" y="${H-pb+4}" font-size="10" fill="#5A5E5F">0</text><path d="${L("a")}" fill="none" stroke="#1F5C85" stroke-width="2.5"/><path d="${L("c")}" fill="none" stroke="#3FB3AD" stroke-width="2.5"/>${[1,8,15,22,29].map(x=>`<text x="${X(x-1)}" y="${H-6}" font-size="10" fill="#5A5E5F" text-anchor="middle">${x}</text>`).join("")}</svg><div class="leg"><span><i style="background:#1F5C85"></i>Agendamentos: ${pts.length?pts[pts.length-1].a:0}</span><span><i style="background:#3FB3AD"></i>Compareceram: ${pts.length?pts[pts.length-1].c:0}</span></div><div class="note">Soma pela data da consulta. Agendamentos com consulta em outro mês não aparecem nesta curva.</div></div>`}
+function units(d,k){const r=d.un.map(u=>({n:u.nome,a:k==="out"?u.ao:u.an,l:k==="out"?u.lo:u.ln}));
+ return `<div class="card"><h2>Demanda por unidade</h2><table><tr><th>Unidade</th><th>Leads de formulário</th><th>Agendamentos</th></tr>${r.map(x=>`<tr><td>${x.n}</td><td>${x.l}</td><td>${x.a}</td></tr>`).join("")}</table><div class="note">Leads de formulário e agendamentos vêm de fontes diferentes; a comparação por unidade é indicativa.</div></div>`}
+function donut(a,c,t){const p=a>0?c/a:0,R=42,C=2*Math.PI*R;return `<div class="card" style="text-align:center"><h2>${t}</h2><svg viewBox="0 0 120 120" width="170"><circle cx="60" cy="60" r="${R}" fill="none" stroke="#e1e8ed" stroke-width="16"/><circle cx="60" cy="60" r="${R}" fill="none" stroke="#2e9e7a" stroke-width="16" stroke-dasharray="${p*C} ${C}" transform="rotate(-90 60 60)"/><text x="60" y="58" text-anchor="middle" font-size="20" font-weight="700" fill="#1F5C85">${f1(pct(c,a))}</text><text x="60" y="74" text-anchor="middle" font-size="10" fill="#5A5E5F">${c} de ${a}</text></svg><div class="note">${c} compareceram de ${a} agendamentos</div></div>`}
+function cmp(d){const o=d.ind,ao=o.agendamentos.out,co=o.compareceram.out,an=o.agendamentos.nov,cn=o.compareceram.nov;
+ return `<div class="two">${donut(ao,co,"Outubro (mês todo)")}${donut(an,cn,"Novembro (até hoje)")}</div><div class="card"><table><tr><th>Indicador</th><th>Outubro</th><th>Novembro</th></tr><tr><td>Agendamentos</td><td>${ao}</td><td>${an}</td></tr><tr><td>Compareceram</td><td>${co}</td><td>${cn}</td></tr><tr><td>Taxa de comparecimento</td><td>${f1(pct(co,ao))}</td><td>${f1(pct(cn,an))}</td></tr><tr><td>Aguardando</td><td>${o.aguardando.out}</td><td>${o.aguardando.nov}</td></tr></table><div class="note">Novembro está em andamento: há ${o.aguardando.nov} consultas aguardando, o que reduz a taxa parcial. Compara-se mês fechado com mês aberto.</div></div>`}
+const WARN=`<div class="card warn"><h2 style="color:#6b4e00">Como ler este painel</h2><div class="note" style="color:#6b4e00">"Conversas iniciadas" (WhatsApp via Meta e Google Ads) e "Leads de formulário" são métricas diferentes. Uma mesma pessoa pode aparecer nas duas, então a soma (oportunidades) pode ter pequena sobreposição. Ligações do Google Ads são mostradas à parte e não entram nas oportunidades.</div></div>`;
+function render(){const a=document.getElementById("app");if(!G){return}
+ a.innerHTML=tab==="cmp"?cmp(G)+WARN:tiles(G,m())+status(G,m())+curve(G,m())+units(G,m())+WARN;
+ document.querySelectorAll(".tabs button").forEach(b=>b.classList.toggle("on",b.dataset.t===tab))}
+document.querySelectorAll(".tabs button").forEach(b=>b.onclick=()=>{tab=b.dataset.t;render()});
+async function load(){const st=document.getElementById("st");
+ try{const r=await fetch(CSV_URL+(CSV_URL.includes("?")?"&":"?")+"t="+Date.now(),{cache:"no-store"});if(!r.ok)throw 0;G=parse(csv(await r.text()));render();st.textContent="atualizado às "+new Date().toLocaleTimeString("pt-BR",{hour:"2-digit",minute:"2-digit"})}
+ catch(e){st.textContent="falha ao atualizar";if(!G)document.getElementById("app").innerHTML='<div class="err">Não foi possível carregar os dados.</div>'}}
+load();setInterval(load,REFRESH_MS);
+</script></body></html>
