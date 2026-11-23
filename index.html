@@ -4,15 +4,16 @@
 <style>
 :root{--navy:#1F5C85;--teal:#3FB3AD;--gray:#5A5E5F;--bg:#f4f7f9;--card:#fff;--line:#e1e8ed;--comp:#2e9e7a;--falt:#d9534f;--desm:#e9a23b;--pend:#a7b3b8;--txt:#1d2b34}
 *{box-sizing:border-box}body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;background:var(--bg);color:var(--txt)}
-header{background:var(--navy);color:#fff;padding:14px 16px;display:flex;align-items:center;gap:14px;flex-wrap:wrap}
-header h1{font-size:18px;margin:0}header small{opacity:.8;display:block;font-size:12px}
+header{background:#fff;border-bottom:4px solid var(--teal);padding:12px 16px;display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap}
+header img{height:44px;display:block}
+header h1{font-size:17px;margin:0;color:var(--navy)}header small{color:var(--gray);display:block;font-size:12px}.hd{text-align:right}
 main{max-width:1000px;margin:0 auto;padding:16px}
 .tabs{display:flex;gap:8px;margin-bottom:14px}
 .tabs button{border:1px solid var(--line);background:#fff;padding:8px 16px;border-radius:20px;font-size:14px;cursor:pointer;color:var(--gray)}
 .tabs button.on{background:var(--navy);color:#fff;border-color:var(--navy)}
 .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin-bottom:14px}
 .tile,.card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px}
-.tile b{display:block;font-size:28px;color:var(--navy)}.tile span{font-size:12px;color:var(--gray)}
+.tile{border-top:3px solid var(--teal)}.tile b{display:block;font-size:28px;color:var(--navy)}.tile span{font-size:12px;color:var(--gray)}
 .card{margin-bottom:14px}.card h2{font-size:15px;margin:0 0 10px;color:var(--navy)}
 .note{font-size:12px;color:var(--gray);margin-top:8px;line-height:1.5}
 .warn{background:#fff7e6;border-color:#f0d9a8;color:#6b4e00}
@@ -24,7 +25,7 @@ table{width:100%;border-collapse:collapse;font-size:13px}th,td{padding:7px 6px;b
 svg text{font-family:inherit}
 #st{font-size:12px;opacity:.85}.err{color:#b00020;padding:20px}
 </style></head><body>
-<header><div><h1>Painel SDR · Audiovida</h1><small>Números agregados · <span id="st">carregando…</span></small></div></header>
+<header><img alt="Audiovida soluções auditivas" src="Logo_1.png"><div class="hd"><h1>Painel SDR · Audiovida</h1><small>Números agregados · <span id="st">carregando…</span></small></div></header>
 <main>
 <div class="tabs"><button data-t="nov" class="on">Novembro</button><button data-t="out">Outubro</button><button data-t="cmp">Comparativo</button></div>
 <div id="app"></div>
