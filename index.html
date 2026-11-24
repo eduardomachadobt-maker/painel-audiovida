@@ -105,6 +105,24 @@ svg text{font-family:inherit;pointer-events:none}
 #tip{position:fixed;z-index:50;display:none;background:#12384f;color:#fff;border-radius:10px;padding:8px 10px;font-size:12px;line-height:1.45;max-width:min(280px,calc(100vw - 16px));pointer-events:none;box-shadow:0 4px 14px rgba(0,0,0,.25)}
 #tip b{display:block;font-size:13px;margin-bottom:2px}
 .err{color:#b00020;padding:20px}
+.tabrow{display:flex;gap:8px;align-items:center;flex-wrap:wrap;justify-content:flex-end}
+.yr{font:inherit;font-size:13px;font-weight:600;color:var(--navy);background:#fff;border:1px solid var(--line);border-radius:999px;padding:9px 30px 9px 14px;cursor:pointer;appearance:none;-webkit-appearance:none;background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='10' height='6'><path d='M1 1l4 4 4-4' fill='none' stroke='%231F5C85' stroke-width='1.6'/></svg>");background-repeat:no-repeat;background-position:right 11px center}
+.yr:focus-visible,.tabs button:focus-visible,.ur:focus-visible{outline:2px solid var(--teal);outline-offset:2px}
+.dgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,260px),1fr));gap:14px;align-items:stretch}
+.dcard{align-items:center;text-align:center;justify-content:space-between;border:1px solid var(--line)}
+.dsvg{width:100%;max-width:210px;aspect-ratio:1/1;height:auto;display:block;margin:0 auto}
+.ugrid{display:flex;flex-direction:column;gap:4px}
+.ur{display:grid;grid-template-columns:minmax(96px,170px) 1fr 84px;align-items:center;gap:12px;padding:10px;border-radius:12px;cursor:pointer;border:1px solid transparent}
+.ur:hover{background:#f1f8f8}.ur.sel{background:#e3f6f5;border-color:var(--teal)}
+.ur .un{font-weight:600;font-size:13.5px;line-height:1.25}
+.ub{display:flex;flex-direction:column;gap:5px;min-width:0}
+.bl{display:flex;align-items:center;gap:8px}
+.bl .tr{flex:1;min-width:0;height:12px;border-radius:6px;background:#eef3f6;overflow:hidden}
+.bl .tr i{display:block;height:100%;border-radius:6px}
+.bl b{flex:none;width:30px;text-align:right;font-size:13px;font-variant-numeric:tabular-nums}
+.uc{text-align:right;font-weight:700;color:var(--navy);font-variant-numeric:tabular-nums;font-size:15px;line-height:1.1}
+.uc small{display:block;font-weight:400;color:var(--mut);font-size:11px}
+@media(max-width:520px){.ur{grid-template-columns:1fr auto;grid-template-areas:"n c" "b b"}.ur .un{grid-area:n}.ur .ub{grid-area:b}.ur .uc{grid-area:c}.tabrow{justify-content:center}}
 @media(max-width:520px){main{padding:12px;gap:14px}.top{justify-content:center;padding:12px}.ctl{align-items:center}.brand{justify-content:center}.mid{font-size:1.8rem}.big{font-size:2.2rem}#unit{width:100%}.tile,.card,.pri{padding:14px}.crow{padding:12px 14px}.crow .v{font-size:1.7rem}.tabs button{padding:8px 14px}}
 </style></head><body>
 <main>
@@ -114,7 +132,7 @@ svg text{font-family:inherit;pointer-events:none}
   <h1>Painel SDR · Audiovida</h1>
  </div>
  <div class="ctl">
-  <div class="tabs" id="tabs"></div>
+  <div class="tabrow"><select id="year" class="yr" aria-label="Ano"></select><div class="tabs" id="tabs"></div></div>
   <div class="sync"><span id="st">carregando…</span><button type="button" class="refresh" id="rf">Atualizar agora</button></div>
  </div>
 </header>
@@ -128,260 +146,18 @@ const REFRESH_MS = 120000;
 /* Regra da taxa de comparecimento: false = elegíveis são TODOS os agendamentos do mês (regra atual do SDR).
    true = elegíveis são os agendamentos menos os desmarcados. */
 const EXCLUIR_DESMARCADOS_NA_TAXA = false;
-/* Meses do painel. Para incluir dezembro: adicionar uma linha aqui (com as colunas correspondentes na aba "Resumo público"). */
+/* Meses do painel. Cada mês traz o ano (y) e as colunas da aba "Resumo público". Para incluir dezembro ou 2027:
+   adicionar uma linha aqui, com k no formato "AAAA-MM", e as colunas/fórmulas correspondentes na planilha. */
 const MONTHS=[
- {k:"nov",label:"Novembro",mm:"11",y:2026,mo:10,days:30,ci:2,da:2,dc:4,ua:9,ul:11},
- {k:"out",label:"Outubro",mm:"10",y:2026,mo:9,days:31,ci:1,da:1,dc:3,ua:8,ul:10}
+ {k:"2026-11",y:2026,mo:10,label:"Novembro",mm:"11",days:30,ci:2,da:2,dc:4,ua:9,ul:11},
+ {k:"2026-10",y:2026,mo:9,label:"Outubro",mm:"10",days:31,ci:1,da:1,dc:3,ua:8,ul:10}
 ];
-let D=null, tab="nov", unit="", range=0, CV=null;
+/* Anos do seletor. Para 2028 e seguintes, basta incluir o ano aqui. */
+const YEARS=[2026,2027];
+const monthsOf=y=>MONTHS.filter(m=>m.y===y);
+const defTab=y=>{const ms=monthsOf(y);return ms.length?ms.reduce((a,b)=>b.mo>a.mo?b:a).k:""};
+let year=YEARS.includes(new Date().getFullYear())?new Date().getFullYear():YEARS[0];
+let D=null, tab=defTab(year), unit="", range=0, CV=null;
 const $=s=>document.querySelector(s);
 const n=v=>{v=parseFloat(String(v||"0").replace(",","."));return isNaN(v)?0:v};
 const pct=(a,b)=>b>0?Math.round(a/b*1000)/10:0;
-const f1=x=>String(x).replace(".",",")+"%";
-const pad=x=>String(x).padStart(2,"0");
-const esc=s=>String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
-const mo=k=>MONTHS.find(x=>x.k===k);
-
-function csv(t){const r=[];let row=[],c="",q=false;for(let i=0;i<t.length;i++){const ch=t[i];if(q){if(ch=='"'){if(t[i+1]=='"'){c+='"';i++}else q=false}else c+=ch}else if(ch=='"')q=true;else if(ch==","){row.push(c);c=""}else if(ch=="\n"){row.push(c);r.push(row);row=[];c=""}else if(ch!="\r")c+=ch}row.push(c);r.push(row);return r}
-function parse(g){
- const cell=(r,c)=>(g[r-1]||[])[c]||"";
- const out={};
- MONTHS.forEach(M=>{
-  const ind={};
-  [[2,11],[47,55]].forEach(([a,b])=>{for(let r=a;r<=b;r++){const nm=cell(r,0);if(nm)ind[nm]=n(cell(r,M.ci))}});
-  const dia=[];for(let r=14;r<=44;r++)dia.push({d:n(cell(r,0)),a:n(cell(r,M.da)),c:n(cell(r,M.dc))});
-  const un=[];for(let r=2;r<=8;r++)if(cell(r,6))un.push({nome:cell(r,6),a:n(cell(r,M.ua)),l:n(cell(r,M.ul))});
-  out[M.k]={ind,dia,un}});
- return out}
-
-/* ---------- métricas calculadas ---------- */
-function calc(k){
- const i=D[k].ind,g=x=>i[x]||0;
- const meta=g("conversas_meta"),goog=g("conversas_google"),lig=g("ligacoes_google"),form=g("leads_formulario");
- const ag=g("agendamentos"),comp=g("compareceram"),falt=g("faltaram"),desm=g("desmarcaram"),pend=g("aguardando");
- const elig=EXCLUIR_DESMARCADOS_NA_TAXA?Math.max(0,ag-desm):ag;
- const eligAlt=EXCLUIR_DESMARCADOS_NA_TAXA?ag:Math.max(0,ag-desm);
- const sim=g("aud_sim"),nao=g("aud_nao"),valid=sim+nao;
- return {meta,goog,lig,form,ag,comp,falt,desm,pend,elig,eligAlt,
-  taxa:pct(comp,elig),taxaAlt:pct(comp,eligAlt),
-  sim,nao,valid,naoInfo:g("aud_nao_informada"),qual:pct(sim,valid),
-  eventos:g("forms_eventos"),comTel:g("forms_com_telefone"),semTel:g("forms_sem_telefone"),
-  unicos:g("forms_unicos"),dup:g("forms_duplicados"),simUnicos:g("aud_sim_unicos"),
-  oport:meta+goog+form,brutos:meta+goog+lig+form}}
-
-/* ---------- dicas (mouse e toque) ---------- */
-function hideTip(){$("#tip").style.display="none";const l=$("#cvl");if(l){l.style.display="none";$("#cva").style.display="none";$("#cvc").style.display="none"}}
-function tipAt(lines,x,y){
- const t=$("#tip");t.innerHTML=lines.map((s,i)=>i?`<div>${esc(s)}</div>`:`<b>${esc(s)}</b>`).join("");
- t.style.display="block";
- const w=t.offsetWidth,h=t.offsetHeight;
- let left=Math.max(8,Math.min(window.innerWidth-w-8,x-w/2));
- let top=y-h-14;if(top<8)top=y+18;
- t.style.left=left+"px";t.style.top=top+"px"}
-function tipFrom(e){const t=e.target.closest&&e.target.closest("[data-tip]");if(!t)return false;tipAt(t.dataset.tip.split("|"),e.clientX,e.clientY);return true}
-document.addEventListener("pointerover",e=>{if(e.pointerType==="mouse")tipFrom(e)});
-document.addEventListener("pointermove",e=>{if(e.pointerType==="mouse"&&e.target.closest&&e.target.closest("[data-tip]"))tipFrom(e)});
-document.addEventListener("pointerout",e=>{if(e.pointerType==="mouse"&&e.target.closest&&e.target.closest("[data-tip]"))hideTip()});
-document.addEventListener("click",e=>{
- if(tipFrom(e))return;
- if(!(e.target.closest&&e.target.closest("#cv")))hideTip()});
-const TIP=(...l)=>esc(l.join("|"));
-
-/* ---------- 1. quatro indicadores principais ---------- */
-function priCards(k){
- const c=calc(k);
- const tAg=TIP("Agendamentos","Consultas marcadas pelo SDR no mês (status “Agendado” nas abas de leads).","Inclui as que ainda não aconteceram, as faltas e as desmarcações.");
- const tRe=TIP("Agendamentos realizados","Pacientes agendados que efetivamente compareceram à consulta (status “Compareceu”).");
- const regra=EXCLUIR_DESMARCADOS_NA_TAXA?"Elegíveis = agendamentos do mês menos os desmarcados.":"Elegíveis = todos os agendamentos do mês (faltas, desmarcações e pendentes entram no total).";
- const alt=EXCLUIR_DESMARCADOS_NA_TAXA?`Sem excluir desmarcados seria ${f1(c.taxaAlt)} (${c.comp} ÷ ${c.eligAlt}).`:`Excluindo os desmarcados seria ${f1(c.taxaAlt)} (${c.comp} ÷ ${c.eligAlt}).`;
- const tTx=TIP("Taxa de comparecimento","Fórmula: agendamentos realizados ÷ agendamentos elegíveis × 100.",regra,alt);
- const tQ=TIP("Leads qualificados (%)","Leads de formulário que informaram ter exame de audiometria (menos de 1 ano).","Fórmula: leads com audiometria ÷ leads de formulário com resposta válida × 100.","Respostas em branco ou desconhecidas não são contadas nem como qualificadas nem como negativas.");
- const P=(cls,lab,tip,big,sub,extra)=>`<div class="pri ${cls}"><div class="ph"><span class="kpi-label">${lab}</span><button type="button" class="ib" data-tip="${tip}" aria-label="Explicação: ${esc(lab)}">i</button></div><span class="pbig" data-tip="${tip}">${big}</span><span class="mut">${sub}</span>${extra||""}</div>`;
- const bar=(a,b,cor)=>`<div class="pbar"><i style="width:${b>0?Math.min(100,a/b*100):0}%;background:${cor}"></i></div>`;
- return `<div class="pgrid">`+
-  P("p1","Agendamentos",tAg,c.ag,"consultas marcadas pelo SDR no mês")+
-  P("p2","Agend. realizados",tRe,c.comp,"pacientes que compareceram",bar(c.comp,c.ag,"var(--comp)"))+
-  P("p3","Taxa de comparecimento",tTx,f1(c.taxa),`<span class="n">${c.comp}</span> ÷ <span class="n">${c.elig}</span> agendamentos elegíveis`,bar(c.comp,c.elig,"var(--teal)"))+
-  P("p4","Leads qualificados",tQ,f1(c.qual),`<span class="n">${c.sim}</span> de <span class="n">${c.valid}</span> leads com resposta válida têm audiometria`,bar(c.sim,c.valid,"#127f79"))+
-  `</div>`}
-
-/* ---------- 2. canais de aquisição ---------- */
-function channels(k){
- const c=calc(k);
- const row=(lab,val,tip,sub,na,flag)=>`<div class="crow"><div class="l"><b>${lab}${flag?`<em class="flag">${flag}</em>`:""}<button type="button" class="ib" data-tip="${tip}" aria-label="Explicação: ${esc(lab)}">i</button></b><span class="mut">${sub}</span></div><span class="v${na?" na":""}" data-tip="${tip}">${val}</span></div>`;
- const meta=`<div class="chan meta"><header><span>META ADS</span><small>Facebook e Instagram</small></header>`+
-  row("Conversas iniciadas",c.meta,TIP("Conversas iniciadas (Meta)","Quantidade de conversas iniciadas a partir dos anúncios da Meta, conforme os eventos registrados.","Evento: “Messaging Conversations Started” (WhatsApp ou Messenger)."),"conversas por mensagem iniciadas pelos anúncios")+
-  row("Leads de formulários instantâneos",c.form,TIP("Leads de formulários instantâneos (Meta)","Quantidade de pessoas que preencheram e enviaram formulários instantâneos nas campanhas da Meta.","Evento: cadastro Lead Ads (formulário “FORM QUALIFY”), contado por envio."),"cadastros nos formulários do Facebook e Instagram")+
-  `</div>`;
- const goog=`<div class="chan goog"><header><span>GOOGLE ADS</span><small>Pesquisa e ligações</small></header>`+
-  row("Ligações telefônicas",c.lig,TIP("Ligações telefônicas (Google)","Quantidade de ligações telefônicas registradas como conversões das campanhas do Google Ads.","Evento: “Phone calls” do relatório do Google Ads."),"ligações direto dos anúncios do Google")+
-  row("Conversas iniciadas",c.goog,TIP("Conversões do Google Ads","Quantidade de contatos registrados como conversão nas campanhas do Google Ads.","Atenção: a planilha traz um único campo “Conversions” e não separa conversas de WhatsApp de outros tipos de conversão."),"conversões registradas nos anúncios do Google",false,"dado parcial")+
-  row("Leads de formulários do site","—",TIP("Leads de formulários do site","Quantidade de pessoas que preencheram o formulário do site e foram atribuídas às campanhas do Google Ads.","Sem dado: a planilha não tem uma aba com envios do formulário do site nem a atribuição ao Google."),"não há esta informação na planilha",true,"sem dado")+
-  `</div>`;
- return `<div class="chans">${meta}${goog}</div><div class="card"><div class="ph" style="display:flex;justify-content:space-between;gap:8px;align-items:center"><h3>Oportunidades geradas</h3><button type="button" class="ib" data-tip="${TIP("Oportunidades geradas","Soma de: conversas iniciadas da Meta + formulários da Meta + conversões do Google Ads.","Ligações do Google ficam de fora e são mostradas à parte.","É uma soma de eventos: a mesma pessoa pode aparecer em mais de um canal.")}" aria-label="Explicação: oportunidades geradas">i</button></div><div class="sgrid"><div class="stat" data-tip="${TIP("Oportunidades geradas","Meta (conversas + formulários) + conversões do Google.")}"><b>${c.oport}</b><span>total de oportunidades (eventos)</span></div><div class="stat" data-tip="${TIP("Meta Ads","Conversas iniciadas + leads de formulário da Meta.")}"><b>${c.meta+c.form}</b><span>Meta Ads: conversas + formulários</span></div><div class="stat" data-tip="${TIP("Google Ads","Conversões do Google Ads (ligações não entram).")}"><b>${c.goog}</b><span>Google Ads: conversões</span></div></div><p class="mut">Os formulários da base são todos da Meta (Lead Ads). Eles não são tratados como um terceiro canal: aparecem dentro do bloco Meta Ads.</p></div>`}
-
-/* ---------- 3. qualidade dos leads ---------- */
-function quality(k){
- const c=calc(k),tot=Math.max(1,c.valid+c.naoInfo);
- const seg=(v,cor,t)=>v>0?`<i style="width:${v/tot*100}%;background:${cor}" data-tip="${esc(t)}"></i>`:"";
- const S=(b,lab,tip)=>`<div class="stat" data-tip="${tip}"><b>${b}</b><span>${lab}</span></div>`;
- return `<div class="card"><div class="qhead"><div><h3>Qualidade dos leads</h3><span class="mut">Exame de audiometria informado nos formulários da Meta</span></div><div style="text-align:right"><div class="qbig" data-tip="${TIP("Taxa de qualificação","Leads com audiometria ÷ leads com resposta válida × 100.",c.sim+" de "+c.valid+" respostas válidas.")}">${f1(c.qual)}</div><span class="mut">taxa de qualificação</span></div></div>`+
-  `<div class="pbar" style="height:16px">${seg(c.sim,"#127f79","Com audiometria|"+c.sim+" leads|"+f1(pct(c.sim,c.valid))+" das respostas válidas")}${seg(c.nao,"var(--pend)","Sem audiometria|"+c.nao+" leads|"+f1(pct(c.nao,c.valid))+" das respostas válidas")}${seg(c.naoInfo,"var(--desm)","Não informadas|"+c.naoInfo+" registros sem resposta válida")}</div>`+
-  `<div class="sgrid">`+
-  S(c.sim,"com audiometria (qualificados)",TIP("Leads com audiometria","Responderam “sim, tenho o exame recente”."))+
-  S(c.nao,"sem audiometria",TIP("Leads sem audiometria","Responderam que não têm o exame (com ou sem interesse em realizar).","Não são tratados como qualificados."))+
-  S(c.naoInfo,"respostas não informadas",TIP("Respostas não informadas","Formulários com a resposta em branco ou fora das opções esperadas.","Ficam fora do cálculo da taxa e não são contados como negativos."))+
-  S(c.valid,"com resposta válida",TIP("Leads com resposta válida","Base da taxa: leads com audiometria + leads sem audiometria."))+
-  S(c.simUnicos,"pessoas únicas qualificadas",TIP("Pessoas únicas qualificadas","Telefones diferentes entre os leads com audiometria.","Evita contar duas vezes a mesma pessoa que enviou o formulário mais de uma vez."))+
-  `</div><p class="mut">Campo usado: “você possui um exame de audiometria realizado há menos de 1 ano?” dos formulários da Meta. Nada foi deduzido de outros campos. Hoje a base só tem formulários da Meta; formulários do site não existem na planilha.</p></div>`}
-
-/* ---------- 4. leads únicos e duplicidades ---------- */
-function dups(k){
- const c=calc(k);
- const S=(b,lab,tip,flag)=>`<div class="stat" data-tip="${tip}"><b>${b}</b><span>${lab}${flag?`<em class="flag">${flag}</em>`:""}</span></div>`;
- return `<div class="card"><h3>Leads únicos e duplicidades</h3><span class="mut">Telefone normalizado (últimos 9 dígitos) como chave de comparação</span><div class="sgrid">`+
-  S(c.brutos,"eventos de conversão (brutos)",TIP("Eventos de conversão","Conversas da Meta + formulários da Meta + ligações do Google + conversões do Google.","São contagens brutas dos canais: nenhuma duplicidade é subtraída aqui."))+
-  S(c.eventos,"leads de formulário captados",TIP("Leads captados (formulários)","Cada envio de formulário da Meta é um evento, mesmo que seja da mesma pessoa."))+
-  S(c.unicos,"leads únicos (formulários)",TIP("Leads únicos","Telefones diferentes entre os envios de formulário do mês.","Só formulários têm telefone na planilha, então a contagem não cruza com conversas nem ligações."))+
-  S(c.dup,"contatos duplicados",TIP("Contatos duplicados","Envios de formulário cujo telefone já apareceu antes no mês.","= envios com telefone − telefones únicos."))+
-  S(c.semTel,"sem telefone válido",TIP("Sem telefone válido","Envios sem telefone ou com telefone curto demais para comparar.","Para esses não se presume duplicidade."))+
-  `</div><p class="mut">Conversas iniciadas e ligações não trazem telefone na planilha. Por isso não dá para confirmar que a mesma pessoa conversou no WhatsApp e depois preencheu um formulário. Os indicadores brutos dos canais não são reduzidos por duplicidade.</p></div>`}
-
-/* ---------- consultas, curva, unidades, comparativo ---------- */
-function statusSeg(c){return [["Compareceram","comp",c.comp],["Faltaram","falt",c.falt],["Desmarcaram","desm",c.desm],["Aguardando","pend",c.pend]]}
-function statusTiles(k){
- const c=calc(k),seg=statusSeg(c);
- const sub={comp:"foram à consulta",falt:"agendaram e não vieram",desm:"cancelaram a consulta",pend:"consulta ainda não aconteceu ou sem resultado lançado"};
- const names={comp:"Compareceram",falt:"Faltaram (no-show)",desm:"Desmarcaram",pend:"Aguardando a consulta"};
- return `<div class="status">${seg.map(s=>`<div class="tile st c-${s[1]}" data-tip="${TIP(s[0],s[2]+" de "+c.ag+" agendamentos",f1(pct(s[2],c.ag))+" do total")}"><span class="kpi-label">${names[s[1]]}</span><span class="mid">${s[2]}</span><span class="mut">${sub[s[1]]}</span></div>`).join("")}</div>`}
-function consultas(k,u){
- const c=calc(k),seg=statusSeg(c),mx=Math.max(1,...seg.map(s=>s[2]));
- const tip=s=>TIP(s[0],s[2]+" de "+c.ag+" agendamentos",f1(pct(s[2],c.ag))+" do total");
- const cols=seg.map(s=>`<div class="col" style="--c:var(--${s[1]})" data-tip="${tip(s)}"><span class="v">${s[2]}</span><div class="b" style="height:${Math.max(2,s[2]/mx*130)}px"></div></div>`).join("");
- const labs=seg.map(s=>`<span data-tip="${tip(s)}">${s[0]}</span>`).join("");
- const extra=u?" Status do mês todo: a planilha não separa as consultas por unidade.":"";
- return `<div class="card"><h3>Como estão as consultas</h3><p class="mut">Taxa de comparecimento SDR: <span class="n">${f1(c.taxa)}</span> = <span class="n">${c.comp}</span> consultas realizadas ÷ <span class="n">${c.elig}</span> agendamentos elegíveis.</p><div class="cols">${cols}</div><div class="collab">${labs}</div><p class="mut">Passe o mouse (ou toque) em uma coluna para ver o detalhe. Consultas "aguardando" ainda não aconteceram ou não tiveram resultado lançado e contam como pendentes. Agendamento feito num mês pode ter consulta em outro.${extra}</p></div>`}
-
-function curveData(k){
- const M=mo(k),now=new Date();let end;
- const start0=new Date(M.y,M.mo,1),inMonth=now.getFullYear()===M.y&&now.getMonth()===M.mo;
- if(inMonth)end=Math.min(M.days,now.getDate());else if(now<start0)end=0;else end=M.days;
- const start=range?Math.max(1,end-range+1):1;
- let a=0,c=0;
- return D[k].dia.filter(x=>x.d>=start&&x.d<=end).map(x=>({d:x.d,da:x.a,dc:x.c,a:(a+=x.a),c:(c+=x.c)}))}
-function curve(k,u){
- const pts=curveData(k),N=pts.length,mm=mo(k).mm;
- const btn=[[7,"Últimos 7 dias"],[14,"Últimos 14 dias"],[0,"Mês todo"]].map(r=>`<button data-range="${r[0]}" class="${range===r[0]?"on":""}">${r[1]}</button>`).join("");
- if(!N){CV=null;return `<div class="card"><h3>Curva de crescimento acumulada</h3><div class="rng">${btn}</div><p class="mut">Sem dados para o período.</p></div>`}
- const W=600,H=230,pl=34,pr=12,pt=12,pb=26;
- const mx=Math.max(1,...pts.map(p=>Math.max(p.a,p.c)));
- const X=i=>N<2?pl+(W-pl-pr)/2:pl+i*(W-pl-pr)/(N-1);
- const Y=v=>H-pb-v*(H-pb-pt)/mx;
- const path=s=>pts.map((p,i)=>(i?"L":"M")+X(i).toFixed(1)+" "+Y(p[s]).toFixed(1)).join(" ");
- const yt=[...new Set([0,mx>=4?Math.round(mx/2):0,mx])];
- const grid=yt.map(v=>`<line x1="${pl}" y1="${Y(v)}" x2="${W-pr}" y2="${Y(v)}" stroke="#e1e8ed"/><text x="${pl-6}" y="${Y(v)+3}" font-size="10" fill="#5A5E5F" text-anchor="end">${v}</text>`).join("");
- const step=Math.ceil(N/7);
- const xl=pts.map((p,i)=>i%step===0?`<text x="${X(i)}" y="${H-8}" font-size="10" fill="#5A5E5F" text-anchor="middle">${pad(p.d)}/${mm}</text>`:"").join("");
- const dots=pts.map((p,i)=>`<circle cx="${X(i)}" cy="${Y(p.a)}" r="2.5" fill="#1F5C85"/><circle cx="${X(i)}" cy="${Y(p.c)}" r="2.5" fill="#3FB3AD"/>`).join("");
- const last=pts[N-1];
- CV={pts,N,W,H,pl,pr,X,Y,mm};
- const extra=u?" A curva mostra o mês todo: a planilha não separa os dias por unidade.":"";
- return `<div class="card"><h3>Curva de crescimento acumulada (por dia da consulta)</h3><div class="rng">${btn}</div><svg id="cv" viewBox="0 0 ${W} ${H}" width="100%" role="img" aria-label="Curva acumulada de agendamentos e comparecimentos">${grid}${xl}<path d="${path("a")}" fill="none" stroke="#1F5C85" stroke-width="2.5"/><path d="${path("c")}" fill="none" stroke="#3FB3AD" stroke-width="2.5"/>${dots}<line id="cvl" x1="0" y1="${pt}" x2="0" y2="${H-pb}" stroke="#5A5E5F" stroke-dasharray="3 3" style="display:none"/><circle id="cva" r="5.5" fill="#1F5C85" stroke="#fff" stroke-width="2" style="display:none"/><circle id="cvc" r="5.5" fill="#3FB3AD" stroke="#fff" stroke-width="2" style="display:none"/><rect x="0" y="0" width="${W}" height="${H}" fill="transparent"/></svg><div class="legend"><span><i style="background:#1F5C85"></i>Agendamentos no período: ${last.a}</span><span><i style="background:#3FB3AD"></i>Compareceram no período: ${last.c}</span></div><p class="mut">Passe o mouse ou arraste o dedo sobre a curva para ver cada dia. Soma pela data da consulta; agendamentos com consulta em outro mês não aparecem nesta curva. O recorte "últimos dias" termina no dia de hoje (mês em andamento) ou no fim do mês.${extra}</p></div>`}
-function bindCurve(){
- const s=$("#cv");if(!s||!CV)return;
- const show=e=>{
-  const r=s.getBoundingClientRect(),x=(e.clientX-r.left)/r.width*CV.W;
-  let i=CV.N<2?0:Math.round((x-CV.pl)/((CV.W-CV.pl-CV.pr)/(CV.N-1)));
-  i=Math.max(0,Math.min(CV.N-1,i));const p=CV.pts[i],cx=CV.X(i);
-  const l=$("#cvl"),a=$("#cva"),c=$("#cvc");
-  l.setAttribute("x1",cx);l.setAttribute("x2",cx);l.style.display="";
-  a.setAttribute("cx",cx);a.setAttribute("cy",CV.Y(p.a));a.style.display="";
-  c.setAttribute("cx",cx);c.setAttribute("cy",CV.Y(p.c));c.style.display="";
-  tipAt(["Dia "+pad(p.d)+"/"+CV.mm,"Consultas agendadas para o dia: "+p.da+" (acumulado: "+p.a+")","Compareceram no dia: "+p.dc+" (acumulado: "+p.c+")"],r.left+cx/CV.W*r.width,r.top+CV.Y(Math.max(p.a,p.c))/CV.H*r.height)};
- s.addEventListener("pointermove",show);
- s.addEventListener("pointerdown",show);
- s.addEventListener("pointerleave",e=>{if(e.pointerType==="mouse")hideTip()})}
-
-function units(k,u){
- const rows=D[k].un;
- return `<div class="card"><h3>Demanda por unidade</h3><div class="tw"><table><thead><tr><th>Unidade</th><th>Leads de formulário</th><th>Agendamentos</th><th>Razão</th></tr></thead><tbody>${rows.map(x=>`<tr data-unit="${esc(x.nome)}" class="${u&&u.nome===x.nome?"sel":""}"><td>${esc(x.nome)}</td><td>${x.l}</td><td>${x.a}</td><td>${x.l>0?f1(pct(x.a,x.l)):"—"}</td></tr>`).join("")}</tbody></table></div><p class="mut">Toque ou clique numa unidade para filtrar o painel. Razão = agendamentos ÷ leads de formulário. Leads de formulário e agendamentos vêm de fontes diferentes; a comparação por unidade é indicativa.</p></div>`}
-function unitBlock(k,u){
- const c=calc(k),totAg=c.ag,totLe=c.form;
- const tg=`<em class="tag tu">filtrado: ${esc(u.nome)}</em>`;
- const T=(lab,big,sub)=>`<div class="tile"><span class="kpi-label">${lab}</span><span class="big">${big}</span><span class="mut">${sub}</span>${tg}</div>`;
- return `<div class="unitbox"><h3>Unidade: ${esc(u.nome)}<small>números filtrados por unidade</small></h3><div class="hero">${T("Leads de formulário",u.l,"leads desta unidade no mês")}${T("Agendamentos",u.a,"consultas marcadas nesta unidade")}${T("Razão",u.l>0?f1(pct(u.a,u.l)):"—","agendamentos ÷ leads de formulário")}${T("Participação",totAg>0?f1(pct(u.a,totAg)):"—","parte dos agendamentos do mês")}</div><p class="mut">Comparação: a razão geral do mês (todas as unidades) é ${totLe>0?f1(pct(totAg,totLe)):"—"} (${totAg} agendamentos ÷ ${totLe} leads de formulário). A razão é indicativa: leads de formulário e agendamentos vêm de fontes diferentes.</p></div>`}
-
-function donut(k,title){
- const c=calc(k),a=c.ag,seg=statusSeg(c);
- const R=42,C=2*Math.PI*R;let off=0;
- const tip=s=>TIP(title,s[0]+": "+s[2]+" de "+a+" agendamentos",f1(pct(s[2],a))+" do total");
- let arcs=`<circle cx="60" cy="60" r="${R}" fill="none" stroke="#e1e8ed" stroke-width="16"/>`;
- seg.forEach(s=>{if(s[2]>0&&a>0){const len=s[2]/a*C;arcs+=`<circle data-tip="${tip(s)}" cx="60" cy="60" r="${R}" fill="none" style="stroke:var(--${s[1]});cursor:pointer" stroke-width="16" stroke-dasharray="${len} ${C-len}" stroke-dashoffset="${-off}" transform="rotate(-90 60 60)"/>`;off+=len}});
- return `<div class="card" style="text-align:center;align-items:center"><h3>${esc(title)}</h3><svg viewBox="0 0 120 120" width="180">${arcs}<text x="60" y="58" text-anchor="middle" font-size="20" font-weight="700" fill="#1F5C85">${f1(c.taxa)}</text><text x="60" y="74" text-anchor="middle" font-size="9" fill="#5A5E5F">comparecimento</text></svg><div class="legend" style="justify-content:center">${seg.map(s=>`<span data-tip="${tip(s)}"><i style="background:var(--${s[1]})"></i>${s[0]}: ${s[2]}</span>`).join("")}</div><p class="mut">${c.comp} compareceram de ${c.elig} agendamentos elegíveis. Toque ou passe o mouse nas fatias.</p></div>`}
-function cmp(){
- const a=calc("out"),b=calc("nov");
- const R=(lab,x,y)=>`<tr><td>${lab}</td><td>${x}</td><td>${y}</td></tr>`;
- return `<div class="two">${donut("out","Outubro (mês todo)")}${donut("nov","Novembro (até hoje)")}</div><div class="card"><div class="tw"><table><thead><tr><th>Indicador</th><th>Outubro</th><th>Novembro</th></tr></thead><tbody>`+
-  R("Agendamentos",a.ag,b.ag)+R("Agendamentos realizados",a.comp,b.comp)+R("Taxa de comparecimento",f1(a.taxa),f1(b.taxa))+R("Aguardando",a.pend,b.pend)+
-  R("Leads qualificados (%)",f1(a.qual),f1(b.qual))+R("Leads com audiometria",a.sim,b.sim)+R("Leads sem audiometria",a.nao,b.nao)+R("Respostas não informadas",a.naoInfo,b.naoInfo)+
-  R("Meta: conversas iniciadas",a.meta,b.meta)+R("Meta: leads de formulário",a.form,b.form)+R("Google: ligações",a.lig,b.lig)+R("Google: conversões",a.goog,b.goog)+
-  R("Leads únicos (formulários)",a.unicos,b.unicos)+R("Contatos duplicados",a.dup,b.dup)+
-  `</tbody></table></div><p class="mut">Novembro está em andamento: há ${b.pend} consultas aguardando, o que reduz a taxa parcial. Compara-se mês fechado com mês aberto. O filtro de unidade não se aplica ao comparativo.</p></div>`}
-
-const NOTA=`<div class="card info"><h3>Sobre os dados e limitações</h3><ul>
-<li>Os dados diários e por unidade vêm da aba "Resumo público" da planilha. Essa aba não cruza unidade com dia: ao escolher uma unidade, só os leads de formulário e os agendamentos são filtrados. A curva, o status das consultas, os compareceram e os totais continuam mostrando o mês todo.</li>
-<li>Todos os formulários da base são formulários instantâneos da Meta. Não há na planilha envios do formulário do site nem a atribuição ao Google Ads.</li>
-<li>O Google Ads informa um único campo de conversões, sem separar WhatsApp de outros tipos. Por isso o card do Google mostra “conversões” e marca o dado como parcial.</li>
-<li>Conversas iniciadas e ligações não têm telefone na planilha: leads únicos e duplicados são calculados só entre os formulários.</li>
-</ul></div>`;
-const WARN=`<div class="card warn"><h3>Como ler este painel</h3><p class="mut">"Conversas iniciadas" e "Leads de formulário" são métricas diferentes. Uma mesma pessoa pode aparecer nas duas, então a soma (oportunidades) pode ter pequena sobreposição. Ligações do Google Ads são mostradas à parte e não entram nas oportunidades.</p></div>`;
-
-/* ---------- render ---------- */
-function monthPage(k,u){
- let h="";
- if(u)h+=unitBlock(k,u)+`<h3>Total do mês<small>a planilha não separa os números abaixo por unidade</small></h3>`;
- h+=`<div class="stitle">Indicadores principais</div>`+priCards(k);
- h+=`<div class="stitle">Canais de aquisição</div>`+channels(k);
- h+=`<div class="stitle">Qualidade e unicidade dos leads</div><div class="chans" style="grid-template-columns:repeat(auto-fit,minmax(min(100%,420px),1fr))">${quality(k)}${dups(k)}</div>`;
- h+=`<div class="stitle">Consultas</div>`+statusTiles(k)+consultas(k,u)+curve(k,u)+units(k,u)+NOTA+WARN;
- return h}
-function buildTabs(){
- $("#tabs").innerHTML=MONTHS.map(M=>`<button data-t="${M.k}">${M.label}</button>`).join("")+`<button data-t="cmp">Comparativo</button>`;
- document.querySelectorAll("#tabs button").forEach(b=>b.onclick=()=>{tab=b.dataset.t;render()})}
-function fillUnits(){
- const s=$("#unit"),names=D[MONTHS[0].k].un.map(x=>x.nome);
- const cur=[...s.options].slice(1).map(o=>o.value);
- if(cur.join("|")!==names.join("|")){s.innerHTML='<option value="">Todas as unidades</option>'+names.map(x=>`<option value="${esc(x)}">${esc(x)}</option>`).join("")}
- if(unit&&!names.includes(unit))unit="";
- s.value=unit}
-function render(){
- hideTip();
- document.querySelectorAll("#tabs button").forEach(b=>b.classList.toggle("on",b.dataset.t===tab));
- $("#ctl").style.display=tab==="cmp"?"none":"flex";
- if(!D)return;
- const a=$("#app");
- if(tab==="cmp"){a.innerHTML=`<section class="sec">${cmp()}${NOTA}${WARN}</section>`;return}
- const u=unit?D[tab].un.find(x=>x.nome===unit):null;
- a.innerHTML=`<section class="sec">${monthPage(tab,u)}</section>`;bindCurve()}
-
-buildTabs();
-$("#unit").onchange=e=>{unit=e.target.value;render()};
-$("#rf").onclick=()=>load();
-$("#app").addEventListener("click",e=>{
- const r=e.target.closest("[data-range]");
- if(r){range=+r.dataset.range;render();return}
- const u=e.target.closest("[data-unit]");
- if(u){unit=unit===u.dataset.unit?"":u.dataset.unit;$("#unit").value=unit;render()}});
-
-async function load(){
- const st=$("#st");st.textContent="atualizando…";
- try{
-  const r=await fetch(CSV_URL+(CSV_URL.includes("?")?"&":"?")+"t="+Date.now(),{cache:"no-store"});
-  if(!r.ok)throw 0;
-  D=parse(csv(await r.text()));fillUnits();render();
-  st.textContent="atualizado às "+new Date().toLocaleTimeString("pt-BR",{hour:"2-digit",minute:"2-digit"})
- }catch(e){
-  st.textContent="falha ao atualizar";
-  if(!D)$("#app").innerHTML='<div class="err">Não foi possível carregar os dados.</div>'}}
-load();setInterval(load,REFRESH_MS);
-</script></body></html>
