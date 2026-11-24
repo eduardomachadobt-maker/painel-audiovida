@@ -148,6 +148,86 @@ svg text{font-family:inherit;pointer-events:none}
 .fchips button:hover{background:var(--navy);color:#fff}
 .seg{justify-content:flex-end}
 .subttl{font-size:13px;font-weight:600;color:var(--navy);margin:6px 0 0}
+.vtabs{display:flex;gap:4px;border-bottom:2px solid var(--line);overflow-x:auto}
+.vtabs button{border:0;background:none;font:inherit;font-size:15px;font-weight:600;color:var(--mut);padding:12px 18px;cursor:pointer;border-bottom:3px solid transparent;margin-bottom:-2px;white-space:nowrap}
+.vtabs button:hover{color:var(--navy)}
+.vtabs button.on{color:var(--navy);border-bottom-color:var(--navy);background:#f3f8fb;border-radius:10px 10px 0 0}
+.vtabs button:focus-visible,.sortbar button:focus-visible,.acard:focus-visible,.oline:focus-visible{outline:2px solid var(--teal);outline-offset:2px}
+.totbar{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:10px}
+.tb{background:#f6f9fb;border:1px solid var(--line);border-left:4px solid var(--c,var(--navy));border-radius:12px;padding:10px 12px;display:flex;flex-direction:column;gap:2px;min-width:0}
+.tb span{font-size:12.5px;color:var(--mut)}
+.tb b{font-size:1.35rem;font-variant-numeric:tabular-nums;color:var(--ink)}
+.tb.main b{font-size:1.9rem;color:var(--c,var(--navy))}
+.c-taxa{--c:#127f79}
+.c-ag{--c:var(--navy)}
+@media(max-width:900px){.totbar{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media(max-width:480px){.totbar{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.hls{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,200px),1fr));gap:10px}
+.hl{border:1px solid var(--line);border-radius:12px;padding:10px 12px;display:flex;flex-direction:column;gap:2px;background:#fff;min-width:0}
+.hl span{font-size:12px;color:var(--mut);text-transform:uppercase;letter-spacing:.04em}
+.hl b{font-size:15px;color:var(--navy);line-height:1.25;overflow-wrap:anywhere}
+.hl em{font-style:normal;font-size:13px;color:var(--mut)}
+.def{background:#eef6fb;border-radius:10px;padding:10px 12px;font-size:13px;line-height:1.5;color:#33414a;margin:0}
+.sortbar{display:flex;align-items:center;gap:6px;flex-wrap:wrap;font-size:13px;color:var(--mut)}
+.sortbar button{border:1px solid var(--line);background:#fff;border-radius:999px;padding:6px 12px;font:inherit;font-size:13px;color:var(--mut);cursor:pointer}
+.sortbar button.on{background:var(--navy);border-color:var(--navy);color:#fff}
+.agrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,320px),1fr));gap:14px}
+.acard{border:1px solid var(--line);border-radius:16px;background:#fff;padding:16px;display:flex;flex-direction:column;gap:14px;cursor:pointer;min-width:0}
+.acard:hover{border-color:var(--teal);box-shadow:0 2px 8px rgba(16,24,40,.08)}
+.acard.sel{border-color:var(--teal);box-shadow:0 0 0 2px var(--teal);background:#f7fcfc}
+.acard.dim{opacity:.55}
+.acard.none{background:#fafafa;border-style:dashed}
+.ahead{display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap}
+.ahead h4{margin:0;font-size:18px;color:var(--navy);line-height:1.2}
+.ahead .sub{display:block;font-size:13px;color:var(--mut);margin-top:2px}
+.asec{display:flex;flex-direction:column;gap:9px;padding-top:12px;border-top:1px solid var(--line)}
+.alab{font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--mut)}
+.bh{display:grid;grid-template-columns:minmax(92px,128px) 1fr 34px;gap:10px;align-items:center;font-size:13.5px}
+.bl2{color:var(--ink);line-height:1.2}
+.btr{height:14px;border-radius:7px;background:#eef3f6;overflow:hidden}
+.btr.big{height:18px;border-radius:9px}
+.btr i{display:block;height:100%;border-radius:inherit}
+.bv{text-align:right;font-size:16px;font-variant-numeric:tabular-nums}
+.rate{display:flex;justify-content:space-between;align-items:baseline;font-size:13.5px;color:var(--mut)}
+.rate b{font-size:1.25rem;color:var(--navy);font-variant-numeric:tabular-nums}
+.duo,.trio{display:grid;gap:10px}
+.duo{grid-template-columns:1fr 1fr}.trio{grid-template-columns:repeat(3,minmax(0,1fr))}
+.big2{display:flex;flex-direction:column;min-width:0}
+.big2 b{font-size:2.1rem;line-height:1.05;font-weight:700;font-variant-numeric:tabular-nums;color:var(--c,var(--navy))}
+.big2 span{font-size:12.5px;color:var(--mut)}
+.sbar{display:flex;height:14px;border-radius:7px;overflow:hidden;background:#eef3f6}
+.sbar i{display:block;height:100%}
+.mchips{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.mc{border-left:4px solid var(--c);background:#f6f9fb;border-radius:8px;padding:6px 8px;font-size:12px;color:var(--mut);display:flex;flex-direction:column;line-height:1.2;min-width:0}
+.mc b{font-size:1.2rem;color:var(--ink);font-variant-numeric:tabular-nums}
+.lg2{margin-top:2px}
+.chans2{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,360px),1fr));gap:14px}
+.chcard{border:1px solid var(--line);border-radius:16px;overflow:hidden;background:#fff;min-width:0}
+.chcard>header{padding:12px 16px;font-weight:700;letter-spacing:.05em;color:#fff}
+.chcard>header small{display:block;font-weight:400;font-size:12px;letter-spacing:0;opacity:.9}
+.chcard.meta>header{background:var(--meta)}
+.chcard.goog>header{background:var(--goog);color:#08413e}
+.gtot{display:grid;grid-template-columns:repeat(auto-fit,minmax(78px,1fr));gap:8px;padding:14px 16px;background:#f6f9fb;border-bottom:1px solid var(--line)}
+.gt1{display:flex;flex-direction:column;min-width:0}
+.gt1 b{font-size:1.6rem;line-height:1.05;font-variant-numeric:tabular-nums;color:var(--c,var(--navy))}
+.gt1 span{font-size:12px;color:var(--mut)}
+.orow{padding:14px 16px;border-top:1px solid var(--line);display:flex;flex-direction:column;gap:7px}
+.gtot+.orow{border-top:0}
+.oh{display:flex;justify-content:space-between;align-items:baseline;gap:10px}
+.oname{font-weight:600;font-size:14.5px}
+.ov{font-size:1.5rem;font-weight:700;color:var(--navy);font-variant-numeric:tabular-nums}
+.ov small{font-size:12px;font-weight:400;color:var(--mut);margin-left:4px}
+.omini{display:flex;flex-wrap:wrap;gap:4px 16px;font-size:13px;color:var(--mut)}
+.omini b{color:var(--ink);font-variant-numeric:tabular-nums}
+.onote{margin:0;font-size:12.5px;color:var(--mut);line-height:1.45}
+.olist{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,340px),1fr));gap:10px}
+.oline{border:1px solid var(--line);border-radius:12px;padding:12px 14px;display:flex;flex-direction:column;gap:7px;cursor:pointer;background:#fff;min-width:0}
+.oline:hover{border-color:var(--teal)}
+.oline.sel{border-color:var(--teal);box-shadow:0 0 0 2px var(--teal);background:#f7fcfc}
+.oline.dim{opacity:.55}
+.subttl small{font-weight:400;color:var(--mut)}
+@media(max-width:520px){.bh{grid-template-columns:minmax(84px,110px) 1fr 30px}.big2 b{font-size:1.8rem}.vtabs button{padding:10px 12px;font-size:14px}.trio .big2 b{font-size:1.5rem}}
+@media(max-width:520px){.vtabs button{flex:1;padding:10px 6px;font-size:13px}}
 </style></head><body>
 <main>
 <header class="top">
@@ -407,50 +487,98 @@ const NOTA=`<div class="card info"><h3>Sobre os dados e limitações</h3><ul>
 </ul></div>`;
 const WARN=`<div class="card warn"><h3>Como ler este painel</h3><p class="mut">"Conversas iniciadas" e "Leads de formulário" são métricas diferentes. Uma mesma pessoa pode aparecer nas duas, então a soma (oportunidades) pode ter pequena sobreposição. Ligações do Google Ads são mostradas à parte e não entram nas oportunidades.</p></div>`;
 
-/* ---------- análise dos agendamentos: unidade, fonoaudióloga, origem ---------- */
+/* ---------- análise dos agendamentos: unidade, fonoaudióloga, origem (painéis visuais) ---------- */
 const fonoKey=r=>r.fono||"__none__";
 const fonoName=k=>k==="__none__"?"Sem fonoaudióloga registrada":k;
 const tipRow=(name,t,extra)=>TIP(...[name,"Agendamentos: "+t.ag,"Realizadas: "+t.comp+" · Aguardando: "+t.pend,"Faltaram: "+t.falt+" · Desmarcaram: "+t.desm,t.ag?"Taxa de comparecimento: "+f1(taxaOf(t)):"",extra||""].filter(Boolean));
-const ag5=(t,mx)=>`<td>${t.ag}<div class="mbar"><i style="width:${mx>0?t.ag/mx*100:0}%"></i></div></td><td>${t.comp}</td><td>${t.pend}</td><td>${t.falt}</td><td>${t.desm}</td><td>${t.ag?f1(taxaOf(t)):"—"}</td>`;
 function chips(k){
  if(!filtersOn())return"";
  const c=(w,txt)=>`<span>${esc(txt)} <button type="button" data-clear="${w}" aria-label="Remover filtro">✕</button></span>`;
  return `<div class="fchips"><b>Filtros ativos:</b>${unit?c("unit","Unidade: "+unit):""}${fFono?c("fono","Fonoaudióloga: "+fonoName(fFono)):""}${fOrig?c("orig","Origem: "+OGL[fOrig]):""}<button type="button" data-clear="all">Limpar tudo</button></div><p class="mut">Agendamentos, comparecimento, taxas e as visões de análise foram recalculados com o filtro. Canais de aquisição, qualidade dos leads e a curva por dia seguem no total do mês, porque a planilha não cruza esses números por unidade, fonoaudióloga ou origem.</p>`}
+let sortU="leads",sortF="ag";
+const bar4=t=>{const s=[["comp","Realizadas",t.comp],["pend","Aguardando",t.pend],["falt","Faltas",t.falt],["desm","Desmarcações",t.desm]];
+ return `<div class="sbar${t.ag?"":" empty"}">${t.ag?s.map(x=>x[2]>0?`<i style="width:${x[2]/t.ag*100}%;background:var(--${x[0]})" data-tip="${TIP(x[1],x[2]+" de "+t.ag+" agendamentos",f1(pct(x[2],t.ag))+" do total")}"></i>`:"").join(""):""}</div>`};
+const mchips=t=>`<div class="mchips"><span class="mc c-pend"><b>${t.pend}</b>aguardando</span><span class="mc c-falt"><b>${t.falt}</b>faltas</span><span class="mc c-desm"><b>${t.desm}</b>desmarcações</span></div>`;
+const sorter=(which,cur,opts)=>`<div class="sortbar"><span>Ordenar por</span>${opts.map(o=>`<button type="button" data-sort="${which}" data-by="${o[0]}" class="${cur===o[0]?"on":""}">${o[1]}</button>`).join("")}</div>`;
+const topOf=(rows,fn)=>{let mx=-1,ns=[];rows.forEach(r=>{const v=fn(r);if(v>mx){mx=v;ns=[r]}else if(v===mx)ns.push(r)});return {mx,ns}};
+const hlCard=(lab,rows,fn,fmt,sub)=>{const t=topOf(rows,fn),ok=t.ns.length&&t.mx>0&&t.ns.length<=2;const emp=t.ns.length>2&&t.mx>0;
+ return `<div class="hl"><span>${lab}</span><b>${ok?esc(t.ns.map(r=>r.name).join(" · ")):emp?"Empate entre "+t.ns.length:"—"}</b><em>${ok||emp?fmt(t.mx)+(ok&&sub?" · "+sub(t.ns[0]):""):"sem dados"}</em></div>`};
+const totbar=(t,extra)=>`<div class="totbar"><div class="tb main"><span>Agendamentos</span><b>${t.ag}</b></div><div class="tb main c-comp"><span>Realizadas</span><b>${t.comp}</b></div><div class="tb main c-taxa"><span>Taxa de comparecimento</span><b>${t.ag?f1(taxaOf(t)):"—"}</b></div><div class="tb c-pend"><span>Aguardando</span><b>${t.pend}</b></div><div class="tb c-falt"><span>Faltas</span><b>${t.falt}</b></div><div class="tb c-desm"><span>Desmarcações</span><b>${t.desm}</b></div>${extra||""}</div>`;
+const DEF=`<p class="def"><b>Taxa de comparecimento</b> = consultas realizadas ÷ agendamentos elegíveis × 100. <b>Taxa de conversão</b> = agendamentos ÷ leads de formulário × 100, e pode passar de 100% porque parte dos agendamentos vem de outros canais ou períodos.</p>`;
+const bh=(lab,v,mx,cor,tip,txt)=>`<div class="bh" data-tip="${tip}"><span class="bl2">${lab}</span><div class="btr"><i style="width:${v===null||mx<=0?0:Math.max(v>0?1.5:0,v/mx*100)}%;background:${cor}"></i></div><b class="bv">${txt===undefined?(v===null?"—":v):txt}</b></div>`;
+
 function vUnit(k){
  const m=group(recsOf(k,"unit"),r=>r.unit),un=D[k].un;
  const names=[...new Set([...un.map(x=>x.nome),...[...m.keys()].filter(Boolean)])];
  const noLead=!!(fFono||fOrig);
- const rows=names.map(nm=>({nm,t:m.get(nm)||zero(),l:(un.find(x=>x.nome===nm)||{}).l||0})).sort((a,b)=>b.t.ag-a.t.ag||b.l-a.l||a.nm.localeCompare(b.nm));
- const mx=Math.max(1,...rows.map(r=>r.t.ag)),mc=Math.max(...rows.map(r=>r.t.comp));
- const tot=rows.reduce((a,r)=>{a.t.ag+=r.t.ag;["comp","falt","desm","pend"].forEach(x=>a.t[x]+=r.t[x]);a.l+=r.l;return a},{t:zero(),l:0});
- const conv=(t,l)=>noLead?"—":(l>0?f1(pct(t.ag,l)):"—");
- return `<div class="tw"><table class="atbl"><thead><tr><th>Unidade</th><th>Leads de formulário</th><th>Agend.</th><th>Realiz.</th><th>Aguard.</th><th>Faltaram</th><th>Desm.</th><th>Taxa compar.</th><th>Conversão</th></tr></thead><tbody>${rows.map(r=>`<tr data-unit="${esc(r.nm)}" data-tip="${tipRow(r.nm,r.t,noLead?"Leads e conversão não se aplicam com filtro de fonoaudióloga ou origem.":"Leads de formulário: "+r.l+" · Conversão: "+(r.l>0?f1(pct(r.t.ag,r.l)):"—"))}" class="${unit===r.nm?"sel":unit?"dim":""}"><td class="l">${esc(r.nm)}${r.t.comp===mc&&mc>0?' <em class="flag ok">mais realizadas</em>':""}</td><td>${noLead?"—":r.l}</td>${ag5(r.t,mx)}<td>${conv(r.t,r.l)}</td></tr>`).join("")}</tbody><tfoot><tr><td>Total</td><td>${noLead?"—":tot.l}</td><td>${tot.t.ag}</td><td>${tot.t.comp}</td><td>${tot.t.pend}</td><td>${tot.t.falt}</td><td>${tot.t.desm}</td><td>${tot.t.ag?f1(taxaOf(tot.t)):"—"}</td><td>${conv(tot.t,tot.l)}</td></tr></tfoot></table></div><p class="mut">Clique numa unidade para filtrar o painel. Leads = formulários da Meta que escolheram a unidade; conversas e ligações não informam unidade. Conversão = agendamentos ÷ leads de formulário (pode passar de 100%, pois os agendamentos incluem outros canais).</p>`}
+ const rows=names.map(nm=>{const t=m.get(nm)||zero(),l=(un.find(x=>x.nome===nm)||{}).l||0;return {name:nm,t,l,tx:t.ag?taxaOf(t):-1}});
+ const by=noLead&&sortU==="leads"?"ag":sortU;
+ const key={leads:r=>r.l,ag:r=>r.t.ag,comp:r=>r.t.comp,taxa:r=>r.tx}[by];
+ rows.sort((a,b)=>key(b)-key(a)||b.t.ag-a.t.ag||b.l-a.l||a.name.localeCompare(b.name));
+ const mx=Math.max(1,...rows.map(r=>Math.max(noLead?0:r.l,r.t.ag))),mc=Math.max(0,...rows.map(r=>r.t.comp));
+ const tot=rows.reduce((a,r)=>{["ag","comp","falt","desm","pend"].forEach(x=>a[x]+=r.t[x]);return a},zero());
+ const hl=(noLead?"":hlCard("Mais leads",rows,r=>r.l,v=>v+" leads"))+hlCard("Mais agendamentos",rows,r=>r.t.ag,v=>v+" agend.")+hlCard("Mais consultas realizadas",rows,r=>r.t.comp,v=>v+" realizadas")+hlCard("Melhor comparecimento",rows.filter(r=>r.t.ag>0),r=>r.tx,v=>f1(v),r=>r.t.comp+" de "+r.t.ag);
+ const cards=rows.map(r=>{
+  const cv=!noLead&&r.l>0?f1(pct(r.t.ag,r.l)):"—";
+  const tip=tipRow(r.name,r.t,noLead?"Leads e conversão não se aplicam com filtro de fonoaudióloga ou origem.":"Leads de formulário: "+r.l+" · Conversão: "+cv);
+  return `<div class="acard${unit===r.name?" sel":unit?" dim":""}" data-unit="${esc(r.name)}" role="button" tabindex="0" aria-label="Filtrar por ${esc(r.name)}">
+<div class="ahead"><h4>${esc(r.name)}</h4>${r.t.comp===mc&&mc>0?'<em class="flag ok">mais realizadas</em>':""}</div>
+<div class="asec"><div class="alab">Aquisição</div>
+${noLead?"":bh("Leads de formulário",r.l,mx,"var(--navy)",TIP("Leads de formulário",r.l+" formulários da Meta que escolheram "+r.name),r.l)}
+${bh("Agendamentos gerados",r.t.ag,mx,"var(--teal)",TIP("Agendamentos",r.t.ag+" em "+r.name),r.t.ag)}
+<div class="rate" data-tip="${TIP("Taxa de conversão","Agendamentos ÷ leads de formulário × 100.",noLead?"Não calculada com filtro de fonoaudióloga ou origem (leads não têm esses campos).":r.t.ag+" ÷ "+r.l)}"><span>Taxa de conversão</span><b>${cv}</b></div></div>
+<div class="asec"><div class="alab">Atendimento</div>
+<div class="duo"><div class="big2 c-comp" data-tip="${tip}"><b>${r.t.comp}</b><span>consultas realizadas</span></div><div class="big2 c-taxa" data-tip="${TIP("Taxa de comparecimento","Realizadas ÷ agendamentos elegíveis × 100.",r.t.comp+" ÷ "+(EXCLUIR_DESMARCADOS_NA_TAXA?Math.max(0,r.t.ag-r.t.desm):r.t.ag))}"><b>${r.t.ag?f1(taxaOf(r.t)):"—"}</b><span>comparecimento</span></div></div>
+${bar4(r.t)}${mchips(r.t)}</div></div>`}).join("");
+ return `${totbar(tot)}<div class="hls">${hl}</div>${DEF}${sorter("U",by,[["leads","Leads"],["ag","Agendamentos"],["comp","Realizadas"],["taxa","Comparecimento"]])}<div class="agrid">${cards}</div><div class="legend lg2"><span style="cursor:default"><i style="background:var(--comp)"></i>Realizadas</span><span style="cursor:default"><i style="background:var(--pend)"></i>Aguardando</span><span style="cursor:default"><i style="background:var(--falt)"></i>Faltas</span><span style="cursor:default"><i style="background:var(--desm)"></i>Desmarcações</span></div><p class="mut">Clique em uma unidade para filtrar o painel. Leads de formulário = formulários da Meta que escolheram a unidade; conversas e ligações não informam unidade.</p>`}
+
 function vFono(k){
  const recs=recsOf(k,"fono"),m=group(recs,fonoKey);
- const us=new Map();recs.forEach(r=>{const f=fonoKey(r);if(!us.has(f))us.set(f,new Map());us.get(f).set(r.unit||"sem unidade",(us.get(f).get(r.unit||"sem unidade")||0)+r.n)});
- const rows=[...m.entries()].map(([f,t])=>({f,t})).sort((a,b)=>b.t.ag-a.t.ag||fonoName(a.f).localeCompare(fonoName(b.f)));
+ const us=new Map();recs.forEach(r=>{const f=fonoKey(r);if(!us.has(f))us.set(f,new Map());const u=r.unit||"sem unidade";us.get(f).set(u,(us.get(f).get(u)||0)+r.n)});
+ const rows=[...m.entries()].map(([f,t])=>({f,name:fonoName(f),t,tx:t.ag?taxaOf(t):-1}));
  if(!rows.length)return `<p class="mut">Sem agendamentos com este filtro.</p>`;
- const mx=Math.max(1,...rows.map(r=>r.t.ag));
- const tot=aggAll(recs);
- return `<div class="tw"><table class="atbl"><thead><tr><th>Fonoaudióloga</th><th>Unidade de atendimento</th><th>Agend.</th><th>Realiz.</th><th>Aguard.</th><th>Faltas</th><th>Desm.</th><th>Taxa compar.</th></tr></thead><tbody>${rows.map(r=>{const u=[...us.get(r.f).entries()].sort((a,b)=>b[1]-a[1]).map(([n,q])=>n+" ("+q+")").join(" · ");return `<tr data-fono="${esc(r.f)}" data-tip="${tipRow(fonoName(r.f),r.t,"Unidades: "+u)}" class="${fFono===r.f?"sel":fFono?"dim":""}"><td class="l">${esc(fonoName(r.f))}</td><td class="l"><small>${esc(u)}</small></td>${ag5(r.t,mx)}</tr>`}).join("")}</tbody><tfoot><tr><td>Total</td><td></td><td>${tot.ag}</td><td>${tot.comp}</td><td>${tot.pend}</td><td>${tot.falt}</td><td>${tot.desm}</td><td>${tot.ag?f1(taxaOf(tot)):"—"}</td></tr></tfoot></table></div><p class="mut">Nomes exatamente como registrados na coluna "Fonoaudiólogo" da planilha. Agendamentos sem nome registrado aparecem separados, sem atribuição automática. Clique numa linha para filtrar.</p>`}
+ const key={ag:r=>r.t.ag,comp:r=>r.t.comp,pend:r=>r.t.pend,taxa:r=>r.tx}[sortF];
+ rows.sort((a,b)=>key(b)-key(a)||b.t.ag-a.t.ag||a.name.localeCompare(b.name));
+ const tot=aggAll(recs),named=rows.filter(r=>r.f!=="__none__");
+ const hl=hlCard("Recebeu mais agendamentos",named,r=>r.t.ag,v=>v+" agend.")+hlCard("Realizou mais consultas",named,r=>r.t.comp,v=>v+" realizadas")+hlCard("Maior taxa de comparecimento",named.filter(r=>r.t.ag>0),r=>r.tx,v=>f1(v),r=>r.t.comp+" de "+r.t.ag)+hlCard("Mais consultas aguardando",named,r=>r.t.pend,v=>v+" aguardando");
+ const cards=rows.map(r=>{
+  const u=[...us.get(r.f).entries()].sort((a,b)=>b[1]-a[1]),ut=u.map(([n,q])=>n+" ("+q+")").join(" · ");
+  return `<div class="acard${fFono===r.f?" sel":fFono?" dim":""}${r.f==="__none__"?" none":""}" data-fono="${esc(r.f)}" role="button" tabindex="0" aria-label="Filtrar por ${esc(r.name)}">
+<div class="ahead"><div><h4>${esc(r.name)}</h4><span class="sub">${esc(ut)}</span></div></div>
+<div class="asec"><div class="trio"><div class="big2 c-ag" data-tip="${tipRow(r.name,r.t,"Unidades: "+ut)}"><b>${r.t.ag}</b><span>agendamentos</span></div><div class="big2 c-comp"><b>${r.t.comp}</b><span>realizadas</span></div><div class="big2 c-taxa" data-tip="${TIP("Taxa de comparecimento","Realizadas ÷ agendamentos elegíveis × 100.",r.t.comp+" ÷ "+(EXCLUIR_DESMARCADOS_NA_TAXA?Math.max(0,r.t.ag-r.t.desm):r.t.ag))}"><b>${r.t.ag?f1(taxaOf(r.t)):"—"}</b><span>comparecimento</span></div></div>
+${bar4(r.t)}${mchips(r.t)}</div></div>`}).join("");
+ return `${totbar(tot)}<div class="hls">${hl}</div>${sorter("F",sortF,[["ag","Agendamentos"],["comp","Realizadas"],["pend","Aguardando"],["taxa","Comparecimento"]])}<div class="agrid">${cards}</div><p class="mut">Nomes exatamente como registrados na coluna "Fonoaudiólogo" da planilha. Agendamentos sem nome registrado ficam separados, sem atribuição automática, e não entram nos destaques. Clique em um cartão para filtrar.</p>`}
+
 function vOrig(k){
  const i=D[k].ind,g=x=>i[x]||0,uo=unit?(D[k].un.find(x=>x.nome===unit)||{}).l||0:null;
- const ch=[["Meta Ads — conversas iniciadas",unit?null:g("conversas_meta")],["Meta Ads — formulários instantâneos",unit?uo:g("leads_formulario")],["Google Ads — ligações telefônicas",unit?null:g("ligacoes_google")],["Google Ads — conversas/conversões",unit?null:g("conversas_google")]];
- const tl=ch.reduce((a,x)=>a+(x[1]||0),0);
- const A=`<div class="subttl">Leads recebidos por canal${unit?" (unidade: "+esc(unit)+")":""}</div><div class="tw"><table class="atbl" style="min-width:420px"><thead><tr><th>Canal</th><th>Leads</th><th>Participação</th></tr></thead><tbody>${ch.map(x=>`<tr><td class="l">${x[0]}</td><td>${x[1]===null?"—":x[1]}</td><td>${x[1]===null||unit?"—":f1(pct(x[1],tl))}</td></tr>`).join("")}</tbody></table></div><p class="mut">${unit?"Com unidade selecionada só os formulários têm unidade; conversas e ligações não informam onde o paciente será atendido.":"Participação sobre o total de eventos de conversão do mês (os formulários pertencem ao Meta Ads, não são um terceiro canal)."}</p>`;
+ const L={mc:unit?null:g("conversas_meta"),mf:unit?uo:g("leads_formulario"),gl:unit?null:g("ligacoes_google"),gc:unit?null:g("conversas_google")};
+ const tl=(L.mc||0)+(L.mf||0)+(L.gl||0)+(L.gc||0);
  const recs=recsOf(k,"orig"),m=group(recs,r=>r.og),tot=aggAll(recs);
+ const T=key=>m.get(key)||zero();
+ const mfT=T("meta_form"),mT=T("meta"),gT=T("google");
+ const metaT=zero();["ag","comp","falt","desm","pend"].forEach(x=>metaT[x]=mfT[x]+mT[x]);
+ const share=v=>v===null||unit?"—":tl>0?f1(pct(v,tl)):"—";
+ const mx=Math.max(1,L.mc||0,L.mf||0,L.gl||0,L.gc||0);
+ const sub=(lab,v,t,leadsForConv,note,col)=>{
+  const cv=t&&leadsForConv>0?f1(pct(t.ag,leadsForConv)):"—";
+  return `<div class="orow"><div class="oh"><span class="oname">${lab}</span><span class="ov" data-tip="${TIP(lab,v===null?"Sem dado por unidade":v+" leads",share(v)!=="—"?share(v)+" do total de leads do mês":"")}">${v===null?"—":v}</span></div>
+<div class="btr big"><i style="width:${v===null?0:Math.max(v>0?1.5:0,v/mx*100)}%;background:${col}"></i></div>
+<div class="omini"><span>Participação <b>${share(v)}</b></span><span>Agendamentos <b>${t?t.ag:"—"}</b></span><span>Realizadas <b>${t?t.comp:"—"}</b></span><span>Conversão <b>${cv}</b></span></div>${note?`<p class="onote">${note}</p>`:""}</div>`};
+ const grp=(cls,title,subt,lead,t,body,tip)=>`<div class="chcard ${cls}"><header><span>${title}<small>${subt}</small></span></header><div class="gtot"><div class="gt1" data-tip="${tip}"><b>${lead===null?"—":lead}</b><span>leads no mês</span></div><div class="gt1"><b>${share(lead)}</b><span>do total</span></div><div class="gt1"><b>${t.ag}</b><span>agendamentos</span></div><div class="gt1 c-comp"><b>${t.comp}</b><span>realizadas</span></div><div class="gt1"><b>${lead>0?f1(pct(t.ag,lead)):"—"}</b><span>conversão</span></div></div>${body}</div>`;
+ const metaLead=unit?null:(L.mc||0)+(L.mf||0),gLead=unit?null:(L.gl||0)+(L.gc||0);
+ const meta=grp("meta","META ADS","Facebook e Instagram",metaLead,metaT,sub("Conversas iniciadas (WhatsApp/Messenger)",L.mc,null,0,"A planilha não registra a origem de cada agendamento por conversa, então agendamentos e conversão não são separados aqui.","var(--navy)")+sub("Formulários instantâneos",L.mf,mfT,L.mf,"Agendamentos com origem registrada como formulário.","#5b8db0"),TIP("Meta Ads","Conversas iniciadas + formulários instantâneos.","Formulários fazem parte do Meta Ads."));
+ const goog=grp("goog","GOOGLE ADS","Pesquisa e ligações",gLead,gT,sub("Ligações telefônicas",L.gl,null,0,"","var(--teal)")+sub("Conversas iniciadas (WhatsApp)",L.gc,null,0,'Dado parcial: a planilha traz um único campo de conversões do Google, sem separar WhatsApp de outros tipos. Agendamentos com origem "Google" aparecem no total do canal acima.',"#8bd3cf"),TIP("Google Ads","Ligações telefônicas + conversões."));
  const order=["meta_form","meta","ads","google","indic","outra","nd"];
- const lead=key=>{if(fFono)return null;if(key==="meta_form")return unit?uo:g("leads_formulario");if(key==="google")return unit?null:g("ligacoes_google")+g("conversas_google");return null};
- const row=(key,label,t,l,sub)=>{const cv=l>0?f1(pct(t.ag,l)):"—";const raw=key==="outra"?[...new Set(recs.filter(r=>r.og==="outra").map(r=>r.raw))].join(", "):"";return `<tr ${sub?'class="sub"':`data-orig="${key}" class="${fOrig===key?"sel":fOrig?"dim":""}"`} data-tip="${tipRow(label,t,raw?"Registrado como: "+raw:"")}"><td class="l">${label}</td><td>${t.ag}</td><td>${t.comp}</td><td>${t.ag?f1(taxaOf(t)):"—"}</td><td>${cv}</td><td>${tot.ag?f1(pct(t.ag,tot.ag)):"—"}</td></tr>`};
- let body="";
- order.forEach(key=>{const t=m.get(key)||zero();if(!t.ag&&key!=="nd"&&key!=="meta_form"&&key!=="google")return;body+=row(key,OGL[key],t,lead(key),false);if(key==="meta"){const a=m.get("meta_form")||zero(),b=m.get("meta")||zero(),s=zero();["ag","comp","falt","desm","pend"].forEach(x=>s[x]=a[x]+b[x]);body+=row("meta_total","Meta Ads (total registrado)",s,fFono||unit?null:g("conversas_meta")+g("leads_formulario"),true)}});
- const inf=tot.ag-((m.get("nd")||zero()).ag);
- const B=`<div class="subttl">Origem registrada nos agendamentos</div><div class="tw"><table class="atbl" style="min-width:560px"><thead><tr><th>Origem</th><th>Agend.</th><th>Realiz.</th><th>Taxa compar.</th><th>Conversão</th><th>% dos agend.</th></tr></thead><tbody>${body}</tbody><tfoot><tr><td>Total</td><td>${tot.ag}</td><td>${tot.comp}</td><td>${tot.ag?f1(taxaOf(tot)):"—"}</td><td></td><td>${tot.ag?"100%":"—"}</td></tr></tfoot></table></div><p class="mut">Origem preenchida em <b>${inf}</b> de <b>${tot.ag}</b> agendamentos${tot.ag?" ("+f1(pct(inf,tot.ag))+")":""}. Conversão = agendamentos com aquela origem ÷ leads do canal correspondente; só existe para Meta Ads e Google Ads, e fica subestimada enquanto a origem não for preenchida em todos os agendamentos. "Meta Ads — sem detalhar" é quando a equipe escreveu só "Meta". Origem não é unidade nem profissional. Clique numa linha para filtrar.</p>`;
- return A+B}
+ const bars=order.map(key=>{const t=T(key);if(!t.ag&&key!=="nd"&&key!=="meta_form"&&key!=="google")return"";
+  const raw=key==="outra"?[...new Set(recs.filter(r=>r.og==="outra").map(r=>r.raw))].join(", "):"";
+  const cor=key==="nd"?"var(--pend)":key==="google"?"var(--teal)":"var(--navy)";
+  return `<div class="oline${fOrig===key?" sel":fOrig?" dim":""}" data-orig="${key}" role="button" tabindex="0" data-tip="${tipRow(OGL[key],t,raw?"Registrado como: "+raw:"")}"><div class="oh"><span class="oname">${OGL[key]}</span><span class="ov">${t.ag}<small>agend.</small></span></div><div class="btr big"><i style="width:${tot.ag?t.ag/tot.ag*100:0}%;background:${cor}"></i></div><div class="omini"><span>% dos agendamentos <b>${tot.ag?f1(pct(t.ag,tot.ag)):"—"}</b></span><span>Realizadas <b>${t.comp}</b></span><span>Comparecimento <b>${t.ag?f1(taxaOf(t)):"—"}</b></span></div></div>`}).join("");
+ const inf=tot.ag-T("nd").ag;
+ return `${DEF}<div class="chans2">${meta}${goog}</div><div class="subttl">Origem registrada nos agendamentos <small>(clique para filtrar)</small></div><div class="olist">${bars}</div><p class="mut">Origem preenchida em <b>${inf}</b> de <b>${tot.ag}</b> agendamentos${tot.ag?" ("+f1(pct(inf,tot.ag))+")":""}. Nada é atribuído por dedução: sem origem registrada, o agendamento fica em "Origem não informada". A conversão por canal fica subestimada enquanto a origem não for preenchida em todos os agendamentos. Com unidade selecionada só os formulários têm unidade. Formulários ficam dentro de Meta Ads, nunca como um terceiro canal.</p>`}
 function analysis(k){
  const vs=[["unit","Por unidade"],["fono","Por fonoaudióloga"],["orig","De onde vieram"]];
  const body=view==="fono"?vFono(k):view==="orig"?vOrig(k):vUnit(k);
- return `<div class="card"><div class="qhead"><h3>Análise dos agendamentos</h3><div class="rng seg" role="tablist">${vs.map(v=>`<button type="button" role="tab" data-view="${v[0]}" class="${view===v[0]?"on":""}" aria-selected="${view===v[0]}">${v[1]}</button>`).join("")}</div></div>${body}</div>`}
+ return `<div class="card"><h3>Análise dos agendamentos</h3><div class="vtabs" role="tablist">${vs.map(v=>`<button type="button" role="tab" data-view="${v[0]}" class="${view===v[0]?"on":""}" aria-selected="${view===v[0]}">${v[1]}</button>`).join("")}</div>${body}</div>`}
 
 /* ---------- render ---------- */
 function monthPage(k,u){
@@ -492,12 +620,13 @@ function render(){
 $("#year").innerHTML=YEARS.map(y=>`<option value="${y}">${y}</option>`).join("");
 $("#year").value=year;
 $("#year").onchange=e=>{year=+e.target.value;tab=defTab(year);buildTabs();render()};
-$("#app").addEventListener("keydown",e=>{if((e.key==="Enter"||e.key===" ")&&e.target.dataset&&e.target.dataset.unit){e.preventDefault();e.target.click()}});
+$("#app").addEventListener("keydown",e=>{if((e.key==="Enter"||e.key===" ")&&e.target.dataset&&(e.target.dataset.unit||e.target.dataset.fono||e.target.dataset.orig)){e.preventDefault();e.target.click()}});
 buildTabs();
 $("#unit").onchange=e=>{unit=e.target.value;render()};
 $("#rf").onclick=()=>load();
 $("#app").addEventListener("click",e=>{
  const v=e.target.closest("[data-view]");if(v){view=v.dataset.view;render();return}
+ const so=e.target.closest("[data-sort]");if(so){if(so.dataset.sort==="U")sortU=so.dataset.by;else sortF=so.dataset.by;render();return}
  const c=e.target.closest("[data-clear]");if(c){const w=c.dataset.clear;if(w==="unit"||w==="all"){unit="";$("#unit").value=""}if(w==="fono"||w==="all")fFono="";if(w==="orig"||w==="all")fOrig="";render();return}
  const f=e.target.closest("[data-fono]");if(f){fFono=fFono===f.dataset.fono?"":f.dataset.fono;render();return}
  const o=e.target.closest("[data-orig]");if(o){fOrig=fOrig===o.dataset.orig?"":o.dataset.orig;render();return}
