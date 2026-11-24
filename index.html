@@ -460,7 +460,7 @@ function analysis(k){
  return `${aud}${per}<div class="g2"><div class="card"><h3 class="h17">Por unidade</h3>${brows(uR,"data-unit",unit,"Sem agendamentos com este filtro.")}</div><div class="card"><h3 class="h17">Por fonoaudióloga</h3>${brows(fR,"data-fono",fFono,"Sem agendamentos com este filtro.")}</div><div class="card"><h3 class="h17">De onde vieram</h3>${brows(oR,"data-orig",fOrig,"Sem agendamentos com este filtro.")}${note}</div>${sit}</div>`}
 
 /* ---------- render ---------- */
- function dezBanner(k,u){if(k!==MONTHS.reduce((a,b)=>b.mo>a.mo?b:a).k)return"";const L=DEZ.filter(x=>!u||x.u===u).sort((a,b)=>a.d.split("/").reverse().join().localeCompare(b.d.split("/").reverse().join()));if(!L.length)return"";return `<div class="dezb"><b>📅 ${L.length} agendamento${L.length>1?"s":""} já marcado${L.length>1?"s":""} para dezembro</b>${L.map(x=>`<span class="it"><i>${x.d.slice(0,5)}</i> ${esc(x.u)}${x.f?" · "+esc(x.f):""}</span>`).join("")}</div>`} unction monthPage(k,u){
+ function dezBanner(k,u){if(k!==MONTHS.reduce((a,b)=>b.mo>a.mo?b:a).k)return"";const L=DEZ.filter(x=>!u||x.u===u).sort((a,b)=>a.d.split("/").reverse().join().localeCompare(b.d.split("/").reverse().join()));if(!L.length)return"";return `<div class="dezb"><b>📅 ${L.length} agendamento${L.length>1?"s":""} já marcado${L.length>1?"s":""} para dezembro</b>${L.map(x=>`<span class="it"><i>${x.d.slice(0,5)}</i> ${esc(x.u)}${x.f?" · "+esc(x.f):""}</span>`).join("")}</div>`} function monthPage(k,u){
  let h=chips(k);
  if(u)h+=unitBlock(k,u); h+=dezBanner(k,u);
  h+=`<div class="stitle">Indicadores principais</div>`+priCards(k);
