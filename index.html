@@ -75,7 +75,7 @@ main{max-width:1180px;margin:0 auto;padding:16px;display:flex;flex-direction:col
 .rng{display:flex;gap:6px;flex-wrap:wrap}
 .rng button{border:1px solid var(--line);background:#fff;padding:6px 12px;border-radius:20px;font-size:13px;cursor:pointer;color:var(--mut);font-family:inherit}
 .rng button.on{background:var(--navy);color:#fff;border-color:var(--navy)}
-.warn{background:#fff7e6}
+.warn{background:#fff7e6}.dezb{background:#fff7e6;border:1px solid #f0d9a8;border-left:4px solid #e8a33d;border-radius:14px;padding:12px 16px;display:flex;flex-wrap:wrap;gap:8px 16px;align-items:center;font-size:13px;color:#6b4e00}.dezb .it{display:inline-flex;gap:6px;align-items:center;background:#fff;border:1px solid #f0d9a8;border-radius:999px;padding:3px 10px;font-size:12px;color:#5a4300}.dezb .it i{font-style:normal;font-weight:700}
 .warn h3{color:#6b4e00}
 .warn .mut{color:#6b4e00}
 .info{background:#eef6fb}
@@ -193,7 +193,7 @@ const YEARS=[2026,2027];
 const monthsOf=y=>MONTHS.filter(m=>m.y===y);
 const defTab=y=>{const ms=monthsOf(y);return ms.length?ms.reduce((a,b)=>b.mo>a.mo?b:a).k:""};
 let year=YEARS.includes(new Date().getFullYear())?new Date().getFullYear():YEARS[0];
-let D=null, R=[], tab=defTab(year), unit="", range=0, CV=null, view="unit", fFono="", fOrig="";
+let DEZ=[]; let D=null, R=[], tab=defTab(year), unit="", range=0, CV=null, view="unit", fFono="", fOrig="";
 const $=s=>document.querySelector(s);
 const n=v=>{v=parseFloat(String(v||"0").replace(",","."));return isNaN(v)?0:v};
 const pct=(a,b)=>b>0?Math.round(a/b*1000)/10:0;
@@ -216,7 +216,7 @@ function parse(g){
   out[M.k]={ind,dia,un,aud,perfil,status}});
  R=[];
  for(let r=59;r<=g.length;r++){const mes=cell(r,0);if(!/^\d{4}-\d{2}$/.test(mes))continue;const og=cell(r,3);R.push({k:mes,unit:cell(r,1).trim(),fono:cell(r,2).trim(),raw:og.trim(),og:OG(og),st:ST(cell(r,4)),n:n(cell(r,5))})}
- return out}
+ DEZ=[];for(let r=2;r<=g.length;r++){const d=cell(r,18);if(/^\d{2}\/12\/\d{4}$/.test(d))DEZ.push({d,u:cell(r,19).trim(),f:cell(r,20).trim()})} return out}
 
 /* ---------- registros agregados (mês × unidade × fonoaudióloga × origem × status) ---------- */
 const ST=s=>{s=String(s||"").toLowerCase();return s.includes("compareceu")?"comp":/n-?show|no-show|faltou|falta/.test(s)?"falt":s.includes("desmarc")?"desm":"pend"};
@@ -460,9 +460,9 @@ function analysis(k){
  return `${aud}${per}<div class="g2"><div class="card"><h3 class="h17">Por unidade</h3>${brows(uR,"data-unit",unit,"Sem agendamentos com este filtro.")}</div><div class="card"><h3 class="h17">Por fonoaudióloga</h3>${brows(fR,"data-fono",fFono,"Sem agendamentos com este filtro.")}</div><div class="card"><h3 class="h17">De onde vieram</h3>${brows(oR,"data-orig",fOrig,"Sem agendamentos com este filtro.")}${note}</div>${sit}</div>`}
 
 /* ---------- render ---------- */
-function monthPage(k,u){
+ function dezBanner(k,u){if(k!==MONTHS.reduce((a,b)=>b.mo>a.mo?b:a).k)return"";const L=DEZ.filter(x=>!u||x.u===u).sort((a,b)=>a.d.split("/").reverse().join().localeCompare(b.d.split("/").reverse().join()));if(!L.length)return"";return `<div class="dezb"><b>📅 ${L.length} agendamento${L.length>1?"s":""} já marcado${L.length>1?"s":""} para dezembro</b>${L.map(x=>`<span class="it"><i>${x.d.slice(0,5)}</i> ${esc(x.u)}${x.f?" · "+esc(x.f):""}</span>`).join("")}</div>`} unction monthPage(k,u){
  let h=chips(k);
- if(u)h+=unitBlock(k,u);
+ if(u)h+=unitBlock(k,u); h+=dezBanner(k,u);
  h+=`<div class="stitle">Indicadores principais</div>`+priCards(k);
  h+=`<div class="stitle">Consultas e comparecimento</div>`+statusTiles(k)+`<div class="dgrid">${donut(k,"Distribuição das consultas")}${consultas(k,u)}</div>`;
  h+=analysis(k);
