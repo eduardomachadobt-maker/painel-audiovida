@@ -464,8 +464,8 @@ function monthPage(k,u){
  let h=chips(k);
  if(u)h+=unitBlock(k,u);
  h+=`<div class="stitle">Indicadores principais</div>`+priCards(k);
- h+=analysis(k);
  h+=`<div class="stitle">Consultas e comparecimento</div>`+statusTiles(k)+`<div class="dgrid">${donut(k,"Distribuição das consultas")}${consultas(k,u)}</div>`;
+ h+=analysis(k);
  h+=`<div class="stitle">Canais de aquisição</div>`+channels(k);
  h+=`<div class="stitle">Qualidade e unicidade dos leads</div><div class="chans" style="grid-template-columns:repeat(auto-fit,minmax(min(100%,420px),1fr))">${quality(k)}${dups(k)}</div>`;
  h+=`<div class="stitle">Evolução</div>`+curve(k,u);
